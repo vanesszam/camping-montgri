@@ -1,4 +1,4 @@
-// CAMPING BOT VANESSA - VERSION FINALE
+// CAMPING BOT VANESSA - VERSION CORRIGÉE
 const TelegramBot = require('node-telegram-bot-api');
 
 const TOKEN = '8029829192:AAG6R2M5-0x5cZ48t-1NSCOBUYzYdanIWPA';
@@ -52,15 +52,31 @@ cleanBot.deleteWebHook().then(() => {
     
     // Données mock pour démonstration
     const mockMissingItems = {
-      '🔵 Blue 15': [{item: 'Mugs Grey', quantity: 2}, {item: 'Frying Pan', quantity: 1}],
-      '🟠 Orange 7': [{item: 'Toilet Brush', quantity: 1}, {item: 'Pillow', quantity: 1}],
-      '🤎 Brown 22': [{item: 'Spoons', quantity: 4}, {item: 'BBQ Gas', quantity: 1}]
+      '🔵 Blue 15': [
+        {item: 'Mugs Grey', quantity: 2}, 
+        {item: 'Frying Pan', quantity: 1}
+      ],
+      '🟠 Orange 7': [
+        {item: 'Toilet Brush', quantity: 1}, 
+        {item: 'Pillow', quantity: 1}
+      ],
+      '🤎 Brown 22': [
+        {item: 'Spoons', quantity: 4}, 
+        {item: 'BBQ Gas', quantity: 1}
+      ]
     };
     
     const mockPendingRepairs = {
-      '🔵 Blue 8': [{issue: 'Door lock broken', priority: 'urgent'}, {issue: 'Electrical outlet not working', priority: 'high'}],
-      '🟠 Orange 15': [{issue: 'Shower head leaking', priority: 'high'}],
-      '🤎 Brown 3': [{issue: 'Window won\'t close', priority: 'urgent'}]
+      '🔵 Blue 8': [
+        {issue: 'Door lock broken', priority: 'urgent'}, 
+        {issue: 'Electrical outlet not working', priority: 'high'}
+      ],
+      '🟠 Orange 15': [
+        {issue: 'Shower head leaking', priority: 'high'}
+      ],
+      '🤎 Brown 3': [
+        {issue: 'Window won\'t close', priority: 'urgent'}
+      ]
     };
     
     // Fonction pour envoyer à Google Sheets
@@ -83,7 +99,7 @@ cleanBot.deleteWebHook().then(() => {
     
     // Menu principal avec nettoyage de session
     function showMainMenu(chatId) {
-      delete userSessions[chatId]; // Nettoyage automatique
+      delete userSessions[chatId];
       
       bot.sendMessage(chatId, '🏠 *Main Menu*\n\nChoose your section:', {
         parse_mode: 'Markdown',
@@ -104,7 +120,7 @@ cleanBot.deleteWebHook().then(() => {
       const chatId = msg.chat.id;
       const userName = msg.from.first_name || 'User';
       
-      delete userSessions[chatId]; // Nettoyage
+      delete userSessions[chatId];
       
       if (authenticatedUsers[chatId]) {
         showMainMenu(chatId);
@@ -170,8 +186,7 @@ cleanBot.deleteWebHook().then(() => {
               resize_keyboard: true
             }
           });
-        }
-        else if (text === '📦 Inventory') {
+        } else if (text === '📦 Inventory') {
           userSessions[chatId] = {step: 'inventory_choice', section: 'inventory'};
           
           bot.sendMessage(chatId, '📦 *Inventory Section*\n\nChoose an action:', {
@@ -186,8 +201,7 @@ cleanBot.deleteWebHook().then(() => {
               resize_keyboard: true
             }
           });
-        }
-        else if (text === '🔧 Maintenance') {
+        } else if (text === '🔧 Maintenance') {
           userSessions[chatId] = {step: 'maintenance_choice', section: 'maintenance'};
           
           bot.sendMessage(chatId, '🔧 *Maintenance Section*\n\nChoose an action:', {
@@ -203,8 +217,7 @@ cleanBot.deleteWebHook().then(() => {
               resize_keyboard: true
             }
           });
-        }
-        else {
+        } else {
           bot.sendMessage(chatId, `❓ Use menu buttons or /menu`);
         }
         return;
@@ -217,22 +230,18 @@ cleanBot.deleteWebHook().then(() => {
           return;
         }
         
-        // ==================== SECTION CLEANING ====================
+        // Section Cleaning
         if (session.section === 'cleaning') {
-          
           if (session.step === 'cleaning_color') {
             if (colors.includes(text)) {
               session.selectedColor = text;
-              session.step = 'cleaning_number';
+              session.step = 'pending_repairs_list';
+            } else if (text === '➕ Report New Issue') {
+              session.step = 'maintenance_color';
               
-              bot.sendMessage(chatId, `🔢 Enter bungalow number for ${text}:\n\n(Ex: 1, 20, 15...)`, {
-                reply_markup: {
-                  keyboard: [[{text: '🔙 Back to Menu'}]],
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-            } else {
+              const keyboard = colors.map(color => [{text: color}]);
+              keyboard.push([{text: '🔙 Back to Menu'}]);
+              
               bot.sendMessage(chatId, '🔧 *Report New Issue*\n\n🎨 Choose bungalow color:', {
                 parse_mode: 'Markdown',
                 reply_markup: {
@@ -241,17 +250,14 @@ cleanBot.deleteWebHook().then(() => {
                   resize_keyboard: true
                 }
               });
-            }
-            else if (text === '📊 Maintenance Log') {
+            } else if (text === '📊 Maintenance Log') {
               bot.sendMessage(chatId, `📊 *Maintenance Log*\n\n✅ **Recently Completed:**\n• 🔵 Blue 12 - Electrical fixed\n• 🟠 Orange 5 - Plumbing repaired\n• 🤎 Brown 18 - Door handle fixed\n\n⏳ **In Progress:**\n• 🟡 Yellow 9 - BBQ repair\n• 🔘 Grey 14 - Shower head replacement\n\n/menu to return`, {
                 parse_mode: 'Markdown',
                 reply_markup: {remove_keyboard: true}
               });
               delete userSessions[chatId];
             }
-          }
-          
-          else if (session.step === 'pending_repairs_list') {
+          } else if (session.step === 'pending_repairs_list') {
             if (text === '🔄 Refresh List') {
               let repairsText = '🔧 *Current Pending Repairs*\n\n';
               
@@ -277,8 +283,7 @@ cleanBot.deleteWebHook().then(() => {
                   resize_keyboard: true
                 }
               });
-            }
-            else if (text === '✅ Mark as Repaired') {
+            } else if (text === '✅ Mark as Repaired') {
               session.step = 'repair_bungalow';
               
               const keyboard = Object.keys(mockPendingRepairs).map(bungalow => [{text: bungalow}]);
@@ -292,9 +297,7 @@ cleanBot.deleteWebHook().then(() => {
                 }
               });
             }
-          }
-          
-          else if (session.step === 'repair_bungalow') {
+          } else if (session.step === 'repair_bungalow') {
             if (text === '🔙 Back') {
               session.step = 'pending_repairs_list';
               
@@ -329,9 +332,7 @@ cleanBot.deleteWebHook().then(() => {
                 }
               });
             }
-          }
-          
-          else if (session.step === 'repair_issue') {
+          } else if (session.step === 'repair_issue') {
             if (text === '🔙 Back') {
               session.step = 'repair_bungalow';
               
@@ -367,10 +368,7 @@ cleanBot.deleteWebHook().then(() => {
               reply_markup: {remove_keyboard: true}
             });
             delete userSessions[chatId];
-          }
-          
-          // Nouveau problème de maintenance
-          else if (session.step === 'maintenance_color') {
+          } else if (session.step === 'maintenance_color') {
             if (colors.includes(text)) {
               session.selectedColor = text;
               session.step = 'maintenance_number';
@@ -385,9 +383,7 @@ cleanBot.deleteWebHook().then(() => {
             } else {
               bot.sendMessage(chatId, '❌ Please choose a color from the list!');
             }
-          }
-          
-          else if (session.step === 'maintenance_number') {
+          } else if (session.step === 'maintenance_number') {
             const number = parseInt(text);
             if (number && number > 0) {
               session.bungalow = `${session.selectedColor} ${number}`;
@@ -410,9 +406,7 @@ cleanBot.deleteWebHook().then(() => {
             } else {
               bot.sendMessage(chatId, '❌ Enter a valid number (ex: 1, 20, 15...)');
             }
-          }
-          
-          else if (session.step === 'maintenance_type') {
+          } else if (session.step === 'maintenance_type') {
             session.selectedType = text;
             session.step = 'maintenance_description';
             
@@ -423,9 +417,7 @@ cleanBot.deleteWebHook().then(() => {
                 resize_keyboard: true
               }
             });
-          }
-          
-          else if (session.step === 'maintenance_description') {
+          } else if (session.step === 'maintenance_description') {
             const description = text === 'skip' ? '' : text;
             
             let priority = 'normal';
@@ -470,11 +462,19 @@ cleanBot.deleteWebHook().then(() => {
   
 }).catch((error) => {
   console.error('❌ Cleanup error:', error);
-});❌ Please choose a color from the list!');
+});'cleaning_number';
+              
+              bot.sendMessage(chatId, `🔢 Enter bungalow number for ${text}:\n\n(Ex: 1, 20, 15...)`, {
+                reply_markup: {
+                  keyboard: [[{text: '🔙 Back to Menu'}]],
+                  one_time_keyboard: true,
+                  resize_keyboard: true
+                }
+              });
+            } else {
+              bot.sendMessage(chatId, '❌ Please choose a color from the list!');
             }
-          }
-          
-          else if (session.step === 'cleaning_number') {
+          } else if (session.step === 'cleaning_number') {
             const number = parseInt(text);
             if (number && number > 0) {
               session.bungalow = `${session.selectedColor} ${number}`;
@@ -496,9 +496,7 @@ cleanBot.deleteWebHook().then(() => {
             } else {
               bot.sendMessage(chatId, '❌ Enter a valid number (ex: 1, 20, 15...)');
             }
-          }
-          
-          else if (session.step === 'cleaning_action') {
+          } else if (session.step === 'cleaning_action') {
             if (text === '🏠 Bungalow Ready') {
               await sendToGoogleSheets({
                 bungalow: session.bungalow,
@@ -516,8 +514,7 @@ cleanBot.deleteWebHook().then(() => {
                 reply_markup: {remove_keyboard: true}
               });
               delete userSessions[chatId];
-            }
-            else if (text === '🔧 Maintenance Required') {
+            } else if (text === '🔧 Maintenance Required') {
               await sendToGoogleSheets({
                 bungalow: session.bungalow,
                 item: 'Maintenance Required',
@@ -534,8 +531,7 @@ cleanBot.deleteWebHook().then(() => {
                 reply_markup: {remove_keyboard: true}
               });
               delete userSessions[chatId];
-            }
-            else if (text === '📦 Missing Items') {
+            } else if (text === '📦 Missing Items') {
               session.step = 'cleaning_category';
               
               bot.sendMessage(chatId, '📦 Choose category:', {
@@ -553,9 +549,7 @@ cleanBot.deleteWebHook().then(() => {
                 }
               });
             }
-          }
-          
-          else if (session.step === 'cleaning_category') {
+          } else if (session.step === 'cleaning_category') {
             let category = '';
             if (text === '🍽️ Kitchen') category = 'kitchen';
             else if (text === '🏠 Outdoor') category = 'outdoor';
@@ -579,9 +573,7 @@ cleanBot.deleteWebHook().then(() => {
                 }
               });
             }
-          }
-          
-          else if (session.step === 'cleaning_item') {
+          } else if (session.step === 'cleaning_item') {
             if (text === '🔙 Back') {
               session.step = 'cleaning_category';
               
@@ -612,9 +604,7 @@ cleanBot.deleteWebHook().then(() => {
                 resize_keyboard: true
               }
             });
-          }
-          
-          else if (session.step === 'cleaning_quantity') {
+          } else if (session.step === 'cleaning_quantity') {
             const quantity = parseInt(text);
             if (quantity && quantity > 0) {
               session.selectedQuantity = quantity;
@@ -648,9 +638,7 @@ cleanBot.deleteWebHook().then(() => {
             } else {
               bot.sendMessage(chatId, '❌ Enter a valid number (ex: 1, 2, 3...)');
             }
-          }
-          
-          else if (session.step === 'cleaning_continue') {
+          } else if (session.step === 'cleaning_continue') {
             if (text === '➕ Add Another Item') {
               session.step = 'cleaning_category';
               
@@ -668,8 +656,7 @@ cleanBot.deleteWebHook().then(() => {
                   resize_keyboard: true
                 }
               });
-            }
-            else if (text === '📤 Send Report') {
+            } else if (text === '📤 Send Report') {
               let successCount = 0;
               
               for (const item of session.items) {
@@ -700,19 +687,14 @@ cleanBot.deleteWebHook().then(() => {
               });
               
               delete userSessions[chatId];
-            }
-            else if (text === '🗑️ Cancel All') {
+            } else if (text === '🗑️ Cancel All') {
               bot.sendMessage(chatId, '❌ Report cancelled.\n\n/menu to return', {
                 reply_markup: {remove_keyboard: true}
               });
               delete userSessions[chatId];
             }
           }
-        }
-        
-        // ==================== SECTION INVENTORY ====================
-        else if (session.section === 'inventory') {
-          
+        } else if (session.section === 'inventory') {
           if (session.step === 'inventory_choice') {
             if (text === '📦 Missing Items List') {
               let missingText = '📋 *Current Missing Items*\n\n';
@@ -738,17 +720,14 @@ cleanBot.deleteWebHook().then(() => {
                 }
               });
               session.step = 'missing_items_list';
-            }
-            else if (text === '📊 Check Stock') {
+            } else if (text === '📊 Check Stock') {
               bot.sendMessage(chatId, `📊 *Current Stock Status*\n\n🍽️ **Kitchen:**\n• Mugs Grey: 12 ✅\n• Mugs White: 3 ⚠️\n• Mugs Brown: 8 ✅\n• Dinner Plates Beige: 6 ✅\n\n🪑 **Outdoor:**\n• Outside Chairs White: 8 ✅\n• Outside Chairs Black: 5 ⚠️\n• BBQ Fork: 2 ⚠️\n\n/menu to return`, {
                 parse_mode: 'Markdown',
                 reply_markup: {remove_keyboard: true}
               });
               delete userSessions[chatId];
             }
-          }
-          
-          else if (session.step === 'missing_items_list') {
+          } else if (session.step === 'missing_items_list') {
             if (text === '🔄 Refresh List') {
               let missingText = '📋 *Current Missing Items*\n\n';
               
@@ -772,8 +751,7 @@ cleanBot.deleteWebHook().then(() => {
                   resize_keyboard: true
                 }
               });
-            }
-            else if (text === '📦 Supply Item') {
+            } else if (text === '📦 Supply Item') {
               session.step = 'supply_bungalow';
               
               const keyboard = Object.keys(mockMissingItems).map(bungalow => [{text: bungalow}]);
@@ -787,9 +765,7 @@ cleanBot.deleteWebHook().then(() => {
                 }
               });
             }
-          }
-          
-          else if (session.step === 'supply_bungalow') {
+          } else if (session.step === 'supply_bungalow') {
             if (text === '🔙 Back') {
               session.step = 'missing_items_list';
               
@@ -824,9 +800,7 @@ cleanBot.deleteWebHook().then(() => {
                 }
               });
             }
-          }
-          
-          else if (session.step === 'supply_item') {
+          } else if (session.step === 'supply_item') {
             if (text === '🔙 Back') {
               session.step = 'supply_bungalow';
               
@@ -857,9 +831,7 @@ cleanBot.deleteWebHook().then(() => {
                 resize_keyboard: true
               }
             });
-          }
-          
-          else if (session.step === 'supply_quantity') {
+          } else if (session.step === 'supply_quantity') {
             const suppliedQty = parseInt(text);
             if (suppliedQty && suppliedQty > 0 && suppliedQty <= session.totalMissing) {
               const remaining = session.totalMissing - suppliedQty;
@@ -890,11 +862,7 @@ cleanBot.deleteWebHook().then(() => {
               bot.sendMessage(chatId, `❌ Enter a valid number between 1 and ${session.totalMissing}`);
             }
           }
-        }
-        
-        // ==================== SECTION MAINTENANCE ====================
-        else if (session.section === 'maintenance') {
-          
+        } else if (session.section === 'maintenance') {
           if (session.step === 'maintenance_choice') {
             if (text === '🔧 Pending Repairs') {
               let repairsText = '🔧 *Current Pending Repairs*\n\n';
@@ -921,12 +889,4 @@ cleanBot.deleteWebHook().then(() => {
                   resize_keyboard: true
                 }
               });
-              session.step = 'pending_repairs_list';
-            }
-            else if (text === '➕ Report New Issue') {
-              session.step = 'maintenance_color';
-              
-              const keyboard = colors.map(color => [{text: color}]);
-              keyboard.push([{text: '🔙 Back to Menu'}]);
-              
-              bot.sendMessage(chatId, '
+              session.step =
