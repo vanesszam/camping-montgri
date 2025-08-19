@@ -1,11 +1,11 @@
-// CAMPING BOT - VERSION PROGRESSIVE
+// CAMPING BOT VANESSA - VERSION OPTIMISÉE
 const TelegramBot = require('node-telegram-bot-api');
 
 const TOKEN = '8029829192:AAG6R2M5-0x5cZ48t-1NSCOBUYzYdanIWPA';
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSkZJmQzgwiNVxKbF8TuAj5xU2fY4Na29wHtYxUBYJqMGLzfPZcJoNHcQndcU8yQKg/exec';
 const PASSWORD = '123';
 
-console.log('🏕️ Starting progressive bot...');
+console.log('🏕️ Starting Camping Bot Vanessa...');
 
 const cleanBot = new TelegramBot(TOKEN);
 cleanBot.deleteWebHook().then(() => {
@@ -13,101 +13,86 @@ cleanBot.deleteWebHook().then(() => {
   
   setTimeout(() => {
     const bot = new TelegramBot(TOKEN, {polling: true});
-    console.log('🎉 Bot started');
+    console.log('🎉 Bot started successfully!');
     
     const userSessions = {};
     const authenticatedUsers = {};
     const colors = ['🔵 Blue', '🤎 Brown', '🔘 Grey', '🟠 Orange', '🟡 Yellow'];
     
-    // Detailed cleaning items by category - WITH ALL VARIANTS
+    // Items par catégorie
     const cleaningItems = {
       kitchen: [
-        '🥄 Draining Rack', '🍲 Washing Up Bowl', '🥗 Colander', '🥗 Salad Bowl', 
-        '🧀 Cheese Grater', '🥛 Glass Measurer', '🔪 Chopping Board', '🍳 Pan Small', 
-        '🍳 Pan Medium', '🍳 Pan Large', '🍳 Frying Pan', '🫖 Kettle',
-        '🍽️ Dinner Plates Beige Square', '🍽️ Dinner Plates White Round', '🍽️ Dinner Plates Multicolor Blue/Yellow',
-        '🍽️ Side Plates Beige Square', '🍽️ Side Plates White Round', '🍽️ Side Plates Multicolor Blue/Yellow',
-        '🍰 Dessert Plates Beige Square', '🍰 Dessert Plates White Round', '🍰 Dessert Plates Multicolor Blue/Yellow',
-        '🥣 Cereal Bowls Grey', '🥣 Cereal Bowls Brown', '🥣 Cereal Bowls White',
-        '☕ Mugs Grey', '☕ Mugs White', '☕ Mugs Brown',
-        '🍷 Wine Glass', '🥤 Tumblers', '🍴 Cutlery Tray', '🔪 Knives', 
-        '🍴 Forks', '🥄 Spoons', '🥄 Tea Spoons', '🥄 Serving Spoons', 
-        '🥄 Ladle', '🍴 Kitchen Fork', '🍳 Kitchen Spatula', '🥄 Kitchen Tongs',
-        '🍷 Corkscrew', '🍞 Bread Knife', '🥕 Veg Knife', '🥔 Potato Peeler', 
-        '🥫 Tin Opener', '☕ Coffee Machine', '🍞 Toaster'
+        'Draining Rack', 'Washing Up Bowl', 'Colander', 'Salad Bowl', 'Cheese Grater',
+        'Glass Measurer', 'Chopping Board', 'Pan Small', 'Pan Medium', 'Pan Large',
+        'Frying Pan', 'Kettle', 'Dinner Plates Beige Square', 'Dinner Plates White Round',
+        'Dinner Plates Multicolor Blue/Yellow', 'Side Plates Beige Square', 'Side Plates White Round',
+        'Side Plates Multicolor Blue/Yellow', 'Dessert Plates Beige Square', 'Dessert Plates White Round',
+        'Dessert Plates Multicolor Blue/Yellow', 'Cereal Bowls Grey', 'Cereal Bowls Brown',
+        'Cereal Bowls White', 'Mugs Grey', 'Mugs White', 'Mugs Brown', 'Mugs Blue',
+        'Wine Glass', 'Tumblers', 'Cutlery Tray', 'Knives', 'Steak Knives',
+        'Forks', 'Spoons', 'Tea Spoons', 'Serving Spoons', 'Ladle',
+        'Kitchen Fork', 'Kitchen Spatula', 'Kitchen Tongs', 'Corkscrew',
+        'Bread Knife', 'Veg Knife', 'Potato Peeler', 'Tin Opener',
+        'Coffee Machine', 'Toaster'
       ],
       cleaning: [
-        '🗑️ Bin with Lid', '🪣 Bucket', '🧽 Mop', '🦯 Mop Handle',
-        '🧹 Broom', '🧹 Dustpan/Brush', '🚪 Indoor Mat'
+        'Bin with Lid', 'Bucket', 'Mop', 'Mop Handle', 'Broom', 'Dustpan/Brush', 'Indoor Mat'
       ],
       bedding: [
-        '💤 Pillow', '🛏️ Double Duvets', '🛏️ Single Duvets', 
-        '🛏️ Double Mattress Cover', '🛏️ Single Mattress Cover'
+        'Pillow', 'Double Duvets', 'Single Duvets', 'Double Mattress Cover', 'Single Mattress Cover'
       ],
       outdoor: [
-        '🪑 Outside Table', 
-        '🪑 Outside Chairs White', '🪑 Outside Chairs Black', '🪑 Outside Chairs Longue Black',
-        '👕 Clothes Rack', '🔥 BBQ', '⛽ BBQ Gas', 
-        '🍴 BBQ Fork', '🍳 BBQ Spatula', '🥄 BBQ Tongs',
-        '🚬 Ashtray', '🏠 Outdoor Mat'
+        'Outside Table', 'Outside Chairs White', 'Outside Chairs Black', 'Outside Chairs Longue Black',
+        'Clothes Rack', 'BBQ', 'BBQ Gas', 'BBQ Fork', 'BBQ Spatula', 'BBQ Tongs', 'Ashtray', 'Outdoor Mat'
       ],
       toilet: [
-        '🧽 Toilet Brush'
+        'Toilet Brush'
       ]
     };
     
-    // Detailed inventory items by category - WITH ALL VARIANTS (for Add Stock)
-    const inventoryItems = {
-      kitchen: [
-        '🥄 Draining Rack', '🍲 Washing Up Bowl', '🥗 Colander', '🥗 Salad Bowl', 
-        '🧀 Cheese Grater', '🥛 Glass Measurer', '🔪 Chopping Board', '🍳 Pan Small', 
-        '🍳 Pan Medium', '🍳 Pan Large', '🍳 Frying Pan', '🫖 Kettle',
-        '🍽️ Dinner Plates Beige Square', '🍽️ Dinner Plates White Round', '🍽️ Dinner Plates Multicolor Blue/Yellow',
-        '🍽️ Side Plates Beige Square', '🍽️ Side Plates White Round', '🍽️ Side Plates Multicolor Blue/Yellow',
-        '🍰 Dessert Plates Beige Square', '🍰 Dessert Plates White Round', '🍰 Dessert Plates Multicolor Blue/Yellow',
-        '🥣 Cereal Bowls Grey', '🥣 Cereal Bowls Brown', '🥣 Cereal Bowls White',
-        '☕ Mugs Grey', '☕ Mugs White', '☕ Mugs Brown',
-        '🍷 Wine Glass', '🥤 Tumblers', '🍴 Cutlery Tray', '🔪 Knives', 
-        '🍴 Forks', '🥄 Spoons', '🥄 Tea Spoons', '🥄 Serving Spoons', 
-        '🥄 Ladle', '🍴 Kitchen Fork', '🍳 Kitchen Spatula', '🥄 Kitchen Tongs',
-        '🍷 Corkscrew', '🍞 Bread Knife', '🥕 Veg Knife', '🥔 Potato Peeler', 
-        '🥫 Tin Opener', '☕ Coffee Machine', '🍞 Toaster'
-      ],
-      cleaning_supplies: [
-        '🗑️ Bin with Lid', '🪣 Bucket', '🧽 Mop', '🦯 Mop Handle',
-        '🧹 Broom', '🧹 Dustpan/Brush', '🚪 Indoor Mat'
-      ],
-      bedding: [
-        '💤 Pillow', '🛏️ Double Duvets', '🛏️ Single Duvets', 
-        '🛏️ Double Mattress Cover', '🛏️ Single Mattress Cover'
-      ],
-      outdoor: [
-        '🪑 Outside Table', 
-        '🪑 Outside Chairs White', '🪑 Outside Chairs Black', '🪑 Outside Chairs Longue Black',
-        '👕 Clothes Rack', '🔥 BBQ', '⛽ BBQ Gas', 
-        '🍴 BBQ Fork', '🍳 BBQ Spatula', '🥄 BBQ Tongs',
-        '🚬 Ashtray', '🏠 Outdoor Mat'
-      ],
-      toilet: [
-        '🧽 Toilet Brush'
-      ]
-    };
+    // Fonction pour récupérer les données depuis Google Sheets
+    async function fetchFromGoogleSheets(action, bungalow = null) {
+      try {
+        console.log(`📥 Fetching ${action} from Google Sheets...`);
+        const payload = {action: 'getData', type: action};
+        if (bungalow) payload.bungalow = bungalow;
+        
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        console.log(`✅ Received ${action}:`, result.success);
+        return result.data || [];
+      } catch (error) {
+        console.error(`❌ Error fetching ${action}:`, error);
+        return [];
+      }
+    }
     
+    // Fonction pour envoyer à Google Sheets
     async function sendToGoogleSheets(data) {
       try {
+        console.log('📤 Sending to Google Sheets:', data.item || data.action);
         const response = await fetch(GOOGLE_SCRIPT_URL, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({action: 'addReport', ...data})
         });
-        return await response.json();
+        const result = await response.json();
+        console.log('✅ Google Sheets response:', result.success);
+        return result;
       } catch (error) {
-        console.error('Google Sheets error:', error);
+        console.error('❌ Google Sheets error:', error);
         return { success: false, error: error.message };
       }
     }
     
+    // Menu principal
     function showMainMenu(chatId) {
+      delete userSessions[chatId];
+      
       bot.sendMessage(chatId, '🏠 *Main Menu*\n\nChoose your section:', {
         parse_mode: 'Markdown',
         reply_markup: {
@@ -127,6 +112,8 @@ cleanBot.deleteWebHook().then(() => {
       const chatId = msg.chat.id;
       const userName = msg.from.first_name || 'User';
       
+      delete userSessions[chatId];
+      
       if (authenticatedUsers[chatId]) {
         showMainMenu(chatId);
         return;
@@ -145,27 +132,26 @@ cleanBot.deleteWebHook().then(() => {
         return;
       }
       
-      delete userSessions[chatId];
       showMainMenu(chatId);
     });
     
-    // Message handler
+    // Handler principal des messages
     bot.on('message', async (msg) => {
       const chatId = msg.chat.id;
       const text = msg.text;
       
       if (text && text.startsWith('/')) return;
       
-      console.log(`Message from ${chatId}: "${text}"`);
+      console.log(`📩 User ${chatId}: "${text}"`);
       
       const session = userSessions[chatId];
       
-      // Password step
+      // ÉTAPE 1: AUTHENTIFICATION
       if (session && session.step === 'password') {
         if (text === PASSWORD) {
           authenticatedUsers[chatId] = true;
-          bot.sendMessage(chatId, '✅ Access granted!');
           delete userSessions[chatId];
+          bot.sendMessage(chatId, '✅ Access granted!');
           setTimeout(() => showMainMenu(chatId), 1000);
         } else {
           bot.sendMessage(chatId, '❌ Wrong password! Try again:');
@@ -178,21 +164,449 @@ cleanBot.deleteWebHook().then(() => {
         return;
       }
       
-      // Main menu options (when no active session)
+      // ÉTAPE 2: NAVIGATION PRINCIPALE
       if (!session) {
         if (text === '🧹 Cleaning') {
-          userSessions[chatId] = {step: 'cleaning_color', section: 'cleaning'};
+          userSessions[chatId] = {step: 'color_selection', section: 'cleaning'};
           
           const keyboard = colors.map(color => [{text: color}]);
-          bot.sendMessage(chatId, '🎨 Choose bungalow color:', {
+          keyboard.push([{text: '🔙 Back to Menu'}]);
+          
+          bot.sendMessage(chatId, '🧹 *Cleaning Section*\n\n🎨 Choose bungalow color:', {
+            parse_mode: 'Markdown',
             reply_markup: {
               keyboard: keyboard,
               one_time_keyboard: true,
               resize_keyboard: true
+          } else if (session.step === 'supply_bungalow') {
+            if (text === '🔙 Back') {
+              session.step = 'missing_items_view';
+              
+              bot.sendMessage(chatId, `📋 *Missing Items List*\n\nSelect an option:`, {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                  keyboard: [
+                    [{text: '🔄 Refresh List'}],
+                    [{text: '📦 Supply Item'}],
+                    [{text: '🔙 Back to Menu'}]
+                  ],
+                  one_time_keyboard: true,
+                  resize_keyboard: true
+                }
+              });
+              return;
             }
-          });
+            
+            if (session.missingItemsData[text]) {
+              session.selectedBungalow = text;
+              session.step = 'supply_item';
+              
+              const items = session.missingItemsData[text];
+              const keyboard = items.map(item => [{text: `${item.item} x${item.quantity}`}]);
+              keyboard.push([{text: '🔙 Back'}, {text: '🔙 Back to Menu'}]);
+              
+              bot.sendMessage(chatId, `📦 What did you supply to ${text}?`, {
+                reply_markup: {
+                  keyboard: keyboard,
+                  one_time_keyboard: true,
+                  resize_keyboard: true
+                }
+              });
+            }
+          } else if (session.step === 'supply_item') {
+            if (text === '🔙 Back') {
+              session.step = 'supply_bungalow';
+              
+              const keyboard = Object.keys(session.missingItemsData).map(bungalow => [{text: bungalow}]);
+              keyboard.push([{text: '🔙 Back'}, {text: '🔙 Back to Menu'}]);
+              
+              bot.sendMessage(chatId, '🏠 Which bungalow did you supply?', {
+                reply_markup: {
+                  keyboard: keyboard,
+                  one_time_keyboard: true,
+                  resize_keyboard: true
+                }
+              });
+              return;
+            }
+            
+            session.suppliedItem = text;
+            session.step = 'supply_quantity';
+            
+            const match = text.match(/x(\d+)/);
+            const totalMissing = match ? parseInt(match[1]) : 1;
+            session.totalMissing = totalMissing;
+            
+            bot.sendMessage(chatId, `📦 ${text}\n\n📊 How many did you supply?\n\nTotal missing: ${totalMissing}\nEnter quantity (1-${totalMissing}):`, {
+              reply_markup: {
+                keyboard: [[{text: '🔙 Back to Menu'}]],
+                one_time_keyboard: true,
+                resize_keyboard: true
+              }
+            });
+          } else if (session.step === 'supply_quantity') {
+            const suppliedQty = parseInt(text);
+            if (suppliedQty && suppliedQty > 0 && suppliedQty <= session.totalMissing) {
+              const remaining = session.totalMissing - suppliedQty;
+              const itemName = session.suppliedItem.replace(/x\d+/, '').trim();
+              
+              // ENVOI À GOOGLE SHEETS: Objet fourni
+              await sendToGoogleSheets({
+                bungalow: session.selectedBungalow,
+                item: itemName,
+                quantity: suppliedQty,
+                category: 'supplied',
+                notes: `Item supplied by ${msg.from.first_name}. Original missing: ${session.totalMissing}, Supplied: ${suppliedQty}, Remaining: ${remaining}`,
+                priority: remaining > 0 ? 'partial' : 'completed',
+                reportedBy: msg.from.first_name || 'User',
+                section: 'inventory',
+                action: 'item_supplied',
+                timestamp: new Date().toISOString()
+              });
+              
+              const statusMessage = remaining > 0 ? 
+                `📊 ${remaining} ${itemName} still needed for this bungalow.` :
+                `✨ All items supplied! This item has been removed from the missing items list.`;
+              
+              bot.sendMessage(chatId, `✅ *Supply Recorded Successfully!*\n\n🏠 Bungalow: ${session.selectedBungalow}\n📦 Item: ${itemName}\n📊 Quantity supplied: ${suppliedQty}\n\n${statusMessage}\n\n/menu to return`, {
+                parse_mode: 'Markdown',
+                reply_markup: {remove_keyboard: true}
+              });
+              delete userSessions[chatId];
+            } else {
+              bot.sendMessage(chatId, `❌ Enter a valid number between 1 and ${session.totalMissing}`);
+            }
+          }
         }
-        else if (text === '📦 Inventory') {
+        
+        // SECTION MAINTENANCE
+        else if (session.section === 'maintenance') {
+          if (session.step === 'maintenance_choice') {
+            if (text === '🔧 Pending Repairs') {
+              bot.sendMessage(chatId, '🔄 Loading pending repairs from system...');
+              
+              const pendingRepairs = await fetchFromGoogleSheets('pendingRepairs');
+              
+              if (!pendingRepairs || pendingRepairs.length === 0) {
+                bot.sendMessage(chatId, '✅ *No Pending Repairs!*\n\nAll maintenance issues have been resolved.\n\n/menu to return', {
+                  parse_mode: 'Markdown',
+                  reply_markup: {remove_keyboard: true}
+                });
+                delete userSessions[chatId];
+                return;
+              }
+              
+              // Grouper par bungalow
+              const groupedRepairs = {};
+              pendingRepairs.forEach(repair => {
+                if (!groupedRepairs[repair.bungalow]) {
+                  groupedRepairs[repair.bungalow] = [];
+                }
+                groupedRepairs[repair.bungalow].push(repair);
+              });
+              
+              let repairsText = '🔧 *Current Pending Repairs*\n\n';
+              
+              Object.entries(groupedRepairs).forEach(([bungalow, repairs]) => {
+                repairsText += `${bungalow}:\n`;
+                repairs.forEach(repair => {
+                  const priorityIcon = repair.priority === 'urgent' ? '🚨' : 
+                                     repair.priority === 'high' ? '⚡' : '🔧';
+                  repairsText += `• ${priorityIcon} ${repair.priority}: ${repair.issue}\n`;
+                });
+                repairsText += '\n';
+              });
+              
+              bot.sendMessage(chatId, repairsText + '*Select "Mark as Repaired" to complete repairs*', {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                  keyboard: [
+                    [{text: '✅ Mark as Repaired'}],
+                    [{text: '🔄 Refresh List'}],
+                    [{text: '🔙 Back to Menu'}]
+                  ],
+                  one_time_keyboard: true,
+                  resize_keyboard: true
+                }
+              });
+              session.step = 'pending_repairs_view';
+              session.pendingRepairsData = groupedRepairs;
+            } else if (text === '➕ Report New Issue') {
+              session.step = 'maintenance_color';
+              
+              const keyboard = colors.map(color => [{text: color}]);
+              keyboard.push([{text: '🔙 Back to Menu'}]);
+              
+              bot.sendMessage(chatId, '🔧 *Report New Issue*\n\n🎨 Choose bungalow color:', {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                  keyboard: keyboard,
+                  one_time_keyboard: true,
+                  resize_keyboard: true
+                }
+              });
+            } else if (text === '📊 Maintenance Log') {
+              bot.sendMessage(chatId, '🔄 Loading maintenance log...');
+              
+              const maintenanceLog = await fetchFromGoogleSheets('maintenanceLog');
+              
+              if (!maintenanceLog || maintenanceLog.length === 0) {
+                bot.sendMessage(chatId, '📊 *Maintenance Log*\n\nNo maintenance history available.\n\n/menu to return', {
+                  parse_mode: 'Markdown',
+                  reply_markup: {remove_keyboard: true}
+                });
+                delete userSessions[chatId];
+                return;
+              }
+              
+              let logText = '📊 *Maintenance Log*\n\n✅ **Recently Completed:**\n';
+              
+              maintenanceLog.slice(-10).forEach(entry => {
+                const date = new Date(entry.timestamp).toLocaleDateString();
+                logText += `• ${entry.bungalow} - ${entry.item} (${date})\n`;
+              });
+              
+              bot.sendMessage(chatId, logText + '\n/menu to return', {
+                parse_mode: 'Markdown',
+                reply_markup: {remove_keyboard: true}
+              });
+              delete userSessions[chatId];
+            }
+          } else if (session.step === 'pending_repairs_view') {
+            if (text === '🔄 Refresh List') {
+              bot.sendMessage(chatId, '🔄 Refreshing repairs list...');
+              
+              const pendingRepairs = await fetchFromGoogleSheets('pendingRepairs');
+              
+              if (!pendingRepairs || pendingRepairs.length === 0) {
+                bot.sendMessage(chatId, '✅ *No Pending Repairs!*\n\nAll issues resolved!\n\n/menu to return', {
+                  parse_mode: 'Markdown',
+                  reply_markup: {remove_keyboard: true}
+                });
+                delete userSessions[chatId];
+                return;
+              }
+              
+              // Regrouper par bungalow
+              const groupedRepairs = {};
+              pendingRepairs.forEach(repair => {
+                if (!groupedRepairs[repair.bungalow]) {
+                  groupedRepairs[repair.bungalow] = [];
+                }
+                groupedRepairs[repair.bungalow].push(repair);
+              });
+              
+              let repairsText = '🔧 *Updated Pending Repairs*\n\n';
+              
+              Object.entries(groupedRepairs).forEach(([bungalow, repairs]) => {
+                repairsText += `${bungalow}:\n`;
+                repairs.forEach(repair => {
+                  const priorityIcon = repair.priority === 'urgent' ? '🚨' : 
+                                     repair.priority === 'high' ? '⚡' : '🔧';
+                  repairsText += `• ${priorityIcon} ${repair.priority}: ${repair.issue}\n`;
+                });
+                repairsText += '\n';
+              });
+              
+              bot.sendMessage(chatId, repairsText + '*Select "Mark as Repaired" to complete repairs*', {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                  keyboard: [
+                    [{text: '✅ Mark as Repaired'}],
+                    [{text: '🔄 Refresh List'}],
+                    [{text: '🔙 Back to Menu'}]
+                  ],
+                  one_time_keyboard: true,
+                  resize_keyboard: true
+                }
+              });
+              session.pendingRepairsData = groupedRepairs;
+            } else if (text === '✅ Mark as Repaired') {
+              session.step = 'repair_bungalow';
+              
+              const keyboard = Object.keys(session.pendingRepairsData).map(bungalow => [{text: bungalow}]);
+              keyboard.push([{text: '🔙 Back'}, {text: '🔙 Back to Menu'}]);
+              
+              bot.sendMessage(chatId, '🏠 Which bungalow did you repair?', {
+                reply_markup: {
+                  keyboard: keyboard,
+                  one_time_keyboard: true,
+                  resize_keyboard: true
+                }
+              });
+            }
+          } else if (session.step === 'repair_bungalow') {
+            if (text === '🔙 Back') {
+              session.step = 'pending_repairs_view';
+              
+              bot.sendMessage(chatId, `🔧 *Pending Maintenance Issues*\n\nSelect an option:`, {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                  keyboard: [
+                    [{text: '🔄 Refresh List'}],
+                    [{text: '✅ Mark as Repaired'}],
+                    [{text: '🔙 Back to Menu'}]
+                  ],
+                  one_time_keyboard: true,
+                  resize_keyboard: true
+                }
+              });
+              return;
+            }
+            
+            if (session.pendingRepairsData[text]) {
+              session.selectedBungalow = text;
+              session.step = 'repair_issue';
+              
+              const repairs = session.pendingRepairsData[text];
+              const keyboard = repairs.map(repair => [{text: repair.issue}]);
+              keyboard.push([{text: '🔙 Back'}, {text: '🔙 Back to Menu'}]);
+              
+              bot.sendMessage(chatId, `🔧 What did you repair in ${text}?`, {
+                reply_markup: {
+                  keyboard: keyboard,
+                  one_time_keyboard: true,
+                  resize_keyboard: true
+                }
+              });
+            }
+          } else if (session.step === 'repair_issue') {
+            if (text === '🔙 Back') {
+              session.step = 'repair_bungalow';
+              
+              const keyboard = Object.keys(session.pendingRepairsData).map(bungalow => [{text: bungalow}]);
+              keyboard.push([{text: '🔙 Back'}, {text: '🔙 Back to Menu'}]);
+              
+              bot.sendMessage(chatId, '🏠 Which bungalow did you repair?', {
+                reply_markup: {
+                  keyboard: keyboard,
+                  one_time_keyboard: true,
+                  resize_keyboard: true
+                }
+              });
+              return;
+            }
+            
+            session.repairedIssue = text;
+            
+            // ENVOI À GOOGLE SHEETS: Réparation terminée
+            await sendToGoogleSheets({
+              bungalow: session.selectedBungalow,
+              item: session.repairedIssue,
+              quantity: 1,
+              category: 'maintenance',
+              notes: `Repair completed by ${msg.from.first_name}`,
+              priority: 'completed',
+              reportedBy: msg.from.first_name || 'User',
+              section: 'maintenance',
+              action: 'repair_completed',
+              timestamp: new Date().toISOString()
+            });
+            
+            bot.sendMessage(chatId, `✅ *Repair Completed Successfully!*\n\n🏠 Bungalow: ${session.selectedBungalow}\n🔧 Issue: ${session.repairedIssue}\n\n✨ This issue has been removed from pending repairs and added to maintenance log.\n\n/menu to return`, {
+              parse_mode: 'Markdown',
+              reply_markup: {remove_keyboard: true}
+            });
+            delete userSessions[chatId];
+          } else if (session.step === 'maintenance_color') {
+            if (colors.includes(text)) {
+              session.selectedColor = text;
+              session.step = 'maintenance_number';
+              
+              bot.sendMessage(chatId, `🔢 Enter bungalow number for ${text}:\n\n(Ex: 1, 20, 15...)`, {
+                reply_markup: {
+                  keyboard: [[{text: '🔙 Back to Menu'}]],
+                  one_time_keyboard: true,
+                  resize_keyboard: true
+                }
+              });
+            } else {
+              bot.sendMessage(chatId, '❌ Please choose a color from the list!');
+            }
+          } else if (session.step === 'maintenance_number') {
+            const number = parseInt(text);
+            if (number && number > 0) {
+              session.bungalow = `${session.selectedColor} ${number}`;
+              session.step = 'maintenance_type';
+              
+              bot.sendMessage(chatId, `🔧 Bungalow: ${session.bungalow}\n\nType of problem:`, {
+                reply_markup: {
+                  keyboard: [
+                    [{text: '🚨 Urgent Repair'}],
+                    [{text: '⚡ Electrical Issue'}],
+                    [{text: '🚿 Plumbing Issue'}],
+                    [{text: '🚪 Door/Window Issue'}],
+                    [{text: '🧹 Special Cleaning'}],
+                    [{text: '🔙 Back to Menu'}]
+                  ],
+                  one_time_keyboard: true,
+                  resize_keyboard: true
+                }
+              });
+            } else {
+              bot.sendMessage(chatId, '❌ Enter a valid number (ex: 1, 20, 15...)');
+            }
+          } else if (session.step === 'maintenance_type') {
+            session.selectedType = text;
+            session.step = 'maintenance_description';
+            
+            bot.sendMessage(chatId, `📝 Describe the problem in detail:\n\n(Or type "skip" to skip description)`, {
+              reply_markup: {
+                keyboard: [[{text: 'skip'}, {text: '🔙 Back to Menu'}]],
+                one_time_keyboard: true,
+                resize_keyboard: true
+              }
+            });
+          } else if (session.step === 'maintenance_description') {
+            const description = text === 'skip' ? '' : text;
+            
+            let priority = 'normal';
+            if (session.selectedType.includes('Urgent')) {
+              priority = 'urgent';
+            } else if (session.selectedType.includes('Electrical') || 
+                       session.selectedType.includes('Plumbing')) {
+              priority = 'high';
+            }
+            
+            // ENVOI À GOOGLE SHEETS: Nouveau problème signalé
+            await sendToGoogleSheets({
+              bungalow: session.bungalow,
+              item: session.selectedType,
+              quantity: 1,
+              category: 'maintenance',
+              notes: description,
+              priority: priority,
+              reportedBy: msg.from.first_name || 'User',
+              section: 'maintenance',
+              action: 'new_issue',
+              timestamp: new Date().toISOString()
+            });
+            
+            bot.sendMessage(chatId, `🔧 *New Issue Reported!*\n\n🏠 Bungalow: ${session.bungalow}\n🔧 Type: ${session.selectedType}\n📝 Description: ${description || 'None'}\n⚠️ Priority: ${priority}\n\n✨ This issue has been added to pending repairs list.\n\n/menu to return`, {
+              parse_mode: 'Markdown',
+              reply_markup: {remove_keyboard: true}
+            });
+            delete userSessions[chatId];
+          }
+        }
+      }
+    });
+    
+    // Gestion des erreurs
+    bot.on('error', (error) => {
+      console.error('Bot error:', error);
+    });
+    
+    bot.on('polling_error', (error) => {
+      console.error('Polling error:', error);
+    });
+    
+  }, 2000);
+  
+}).catch((error) => {
+  console.error('❌ Cleanup error:', error);
+}););
+        } else if (text === '📦 Inventory') {
           userSessions[chatId] = {step: 'inventory_choice', section: 'inventory'};
           
           bot.sendMessage(chatId, '📦 *Inventory Section*\n\nChoose an action:', {
@@ -207,8 +621,7 @@ cleanBot.deleteWebHook().then(() => {
               resize_keyboard: true
             }
           });
-        }
-        else if (text === '🔧 Maintenance') {
+        } else if (text === '🔧 Maintenance') {
           userSessions[chatId] = {step: 'maintenance_choice', section: 'maintenance'};
           
           bot.sendMessage(chatId, '🔧 *Maintenance Section*\n\nChoose an action:', {
@@ -224,143 +637,199 @@ cleanBot.deleteWebHook().then(() => {
               resize_keyboard: true
             }
           });
-        }
-        else {
+        } else {
           bot.sendMessage(chatId, `❓ Use menu buttons or /menu`);
         }
         return;
       }
       
-      // Handle active sessions
+      // ÉTAPE 3: GESTION DES SESSIONS ACTIVES
       if (session) {
+        // Retour global au menu
+        if (text === '🔙 Back to Menu') {
+          showMainMenu(chatId);
+          return;
+        }
         
-        // CLEANING SECTION
+        // SECTION CLEANING
         if (session.section === 'cleaning') {
-          
-          if (session.step === 'cleaning_color') {
-            if (colors.some(color => color === text)) {
+          if (session.step === 'color_selection') {
+            if (colors.includes(text)) {
               session.selectedColor = text;
-              session.step = 'cleaning_number';
+              session.step = 'number_input';
               
-              bot.sendMessage(chatId, `🔢 Enter bungalow number for ${text}:\n\n(Ex: 1, 20, 15...)`, {
-                reply_markup: {remove_keyboard: true}
-              });
-            } else {
-              bot.sendMessage(chatId, '❌ Please choose a color from the list!');
-            }
-          }
-          else if (session.step === 'cleaning_number') {
-            const number = parseInt(text);
-            if (number && number > 0) {
-              session.bungalow = `${session.selectedColor} ${number}`;
-              session.items = []; // Initialize items array
-              
-              const keyboard = [
-                [{text: '🏠 Bungalow Ready'}],
-                [{text: '🔧 Maintenance Required'}],
-                [{text: '📦 Missing Items'}],
-                [{text: '🔙 Back to Menu'}]
-              ];
-              
-              bot.sendMessage(chatId, `✅ Bungalow: ${session.bungalow}\n\n🎯 Choose action:`, {
+              bot.sendMessage(chatId, `🔢 Enter bungalow number for ${text}:\n\n(Example: 1, 20, 15...)`, {
                 reply_markup: {
-                  keyboard: keyboard,
+                  keyboard: [[{text: '🔙 Back to Menu'}]],
                   one_time_keyboard: true,
                   resize_keyboard: true
                 }
               });
-              session.step = 'cleaning_action';
+            } else {
+              bot.sendMessage(chatId, '❌ Please choose a color from the list!');
+            }
+          } else if (session.step === 'number_input') {
+            const number = parseInt(text);
+            if (number && number > 0) {
+              session.bungalow = `${session.selectedColor} ${number}`;
+              
+              // RÉCUPÉRATION: Vérifier s'il y a déjà des objets manquants pour ce bungalow
+              bot.sendMessage(chatId, '🔄 Checking existing missing items...');
+              const existingMissingItems = await fetchFromGoogleSheets('missingItems', session.bungalow);
+              
+              if (existingMissingItems && existingMissingItems.length > 0) {
+                // Il y a déjà des objets manquants
+                const itemsList = existingMissingItems.map(item => `• ${item.item} x${item.quantity}`).join('\n');
+                
+                bot.sendMessage(chatId, `📋 *Existing Missing Items for ${session.bungalow}:*\n\n${itemsList}\n\n❓ Do you want to add more missing items?`, {
+                  parse_mode: 'Markdown',
+                  reply_markup: {
+                    keyboard: [
+                      [{text: '➕ Add More Items'}],
+                      [{text: '🏠 Bungalow Ready'}],
+                      [{text: '🔧 Maintenance Required'}],
+                      [{text: '🔙 Back to Menu'}]
+                    ],
+                    one_time_keyboard: true,
+                    resize_keyboard: true
+                  }
+                });
+                session.step = 'existing_items_choice';
+                session.existingItems = existingMissingItems;
+              } else {
+                // Pas d'objets manquants existants, continuer normalement
+                session.step = 'action_choice';
+                session.items = [];
+                
+                bot.sendMessage(chatId, `✅ Bungalow: ${session.bungalow}\n\n🎯 Choose action:`, {
+                  reply_markup: {
+                    keyboard: [
+                      [{text: '🏠 Bungalow Ready'}],
+                      [{text: '🔧 Maintenance Required'}],
+                      [{text: '📦 Missing Items'}],
+                      [{text: '🔙 Back to Menu'}]
+                    ],
+                    one_time_keyboard: true,
+                    resize_keyboard: true
+                  }
+                });
+              }
             } else {
               bot.sendMessage(chatId, '❌ Enter a valid number (ex: 1, 20, 15...)');
             }
-          }
-          else if (session.step === 'cleaning_action') {
-            if (text === '🔙 Back to Menu') {
+          } else if (session.step === 'existing_items_choice') {
+            if (text === '➕ Add More Items') {
+              session.step = 'category_selection';
+              session.items = session.existingItems || [];
+              
+              bot.sendMessage(chatId, '📦 Choose category for additional missing items:', {
+                reply_markup: {
+                  keyboard: [
+                    [{text: '🍽️ Kitchen'}],
+                    [{text: '🏠 Outdoor'}],
+                    [{text: '🧹 Cleaning'}],
+                    [{text: '🛏️ Bedding'}],
+                    [{text: '🚽 Toilet'}],
+                    [{text: '🔙 Back to Menu'}]
+                  ],
+                  one_time_keyboard: true,
+                  resize_keyboard: true
+                }
+              });
+            } else if (text === '🏠 Bungalow Ready') {
+              await sendToGoogleSheets({
+                bungalow: session.bungalow,
+                item: 'Bungalow Ready',
+                quantity: 1,
+                category: 'status',
+                notes: 'Bungalow ready despite existing missing items',
+                priority: 'normal',
+                reportedBy: msg.from.first_name || 'User',
+                section: 'cleaning',
+                timestamp: new Date().toISOString()
+              });
+              
+              bot.sendMessage(chatId, `🎉 *Bungalow Ready!*\n\n🏠 ${session.bungalow} is ready for guests\n\n/menu to return`, {
+                parse_mode: 'Markdown',
+                reply_markup: {remove_keyboard: true}
+              });
               delete userSessions[chatId];
-              showMainMenu(chatId);
-              return;
+            } else if (text === '🔧 Maintenance Required') {
+              await sendToGoogleSheets({
+                bungalow: session.bungalow,
+                item: 'Maintenance Required',
+                quantity: 1,
+                category: 'maintenance',
+                notes: 'Maintenance required with existing missing items',
+                priority: 'high',
+                reportedBy: msg.from.first_name || 'User',
+                section: 'cleaning',
+                timestamp: new Date().toISOString()
+              });
+              
+              bot.sendMessage(chatId, `🔧 *Maintenance Reported!*\n\n🏠 ${session.bungalow} needs maintenance\n\n/menu to return`, {
+                parse_mode: 'Markdown',
+                reply_markup: {remove_keyboard: true}
+              });
+              delete userSessions[chatId];
             }
-            
+          } else if (session.step === 'action_choice') {
             if (text === '🏠 Bungalow Ready') {
               await sendToGoogleSheets({
                 bungalow: session.bungalow,
                 item: 'Bungalow Ready',
                 quantity: 1,
                 category: 'status',
-                notes: '',
+                notes: 'Bungalow ready - no missing items',
                 priority: 'normal',
                 reportedBy: msg.from.first_name || 'User',
-                section: 'cleaning'
+                section: 'cleaning',
+                timestamp: new Date().toISOString()
               });
               
-              bot.sendMessage(chatId, `🎉 *Bungalow Ready reported!*\n\n🏠 ${session.bungalow} is ready for guests\n\n/menu to return`, {
+              bot.sendMessage(chatId, `🎉 *Bungalow Ready!*\n\n🏠 ${session.bungalow} is ready for guests\n\n/menu to return`, {
                 parse_mode: 'Markdown',
                 reply_markup: {remove_keyboard: true}
               });
               delete userSessions[chatId];
-            }
-            else if (text === '🔧 Maintenance Required') {
+            } else if (text === '🔧 Maintenance Required') {
               await sendToGoogleSheets({
                 bungalow: session.bungalow,
                 item: 'Maintenance Required',
                 quantity: 1,
                 category: 'maintenance',
-                notes: '',
+                notes: 'Maintenance required during cleaning',
                 priority: 'high',
                 reportedBy: msg.from.first_name || 'User',
-                section: 'cleaning'
+                section: 'cleaning',
+                timestamp: new Date().toISOString()
               });
               
-              bot.sendMessage(chatId, `🔧 *Maintenance reported!*\n\n🏠 ${session.bungalow} needs maintenance\n\n/menu to return`, {
+              bot.sendMessage(chatId, `🔧 *Maintenance Reported!*\n\n🏠 ${session.bungalow} needs maintenance\n\n/menu to return`, {
                 parse_mode: 'Markdown',
                 reply_markup: {remove_keyboard: true}
               });
               delete userSessions[chatId];
-            }
-            else if (text === '📦 Missing Items') {
-              session.step = 'cleaning_category';
-              
-              const keyboard = [
-                [{text: '🍽️ Kitchen'}],
-                [{text: '🏠 Outdoor'}],
-                [{text: '🧹 Cleaning'}],
-                [{text: '🛏️ Bedding'}],
-                [{text: '🚽 Toilet'}],
-                [{text: '🔙 Back'}]
-              ];
+            } else if (text === '📦 Missing Items') {
+              session.step = 'category_selection';
+              session.items = [];
               
               bot.sendMessage(chatId, '📦 Choose category:', {
                 reply_markup: {
-                  keyboard: keyboard,
+                  keyboard: [
+                    [{text: '🍽️ Kitchen'}],
+                    [{text: '🏠 Outdoor'}],
+                    [{text: '🧹 Cleaning'}],
+                    [{text: '🛏️ Bedding'}],
+                    [{text: '🚽 Toilet'}],
+                    [{text: '🔙 Back to Menu'}]
+                  ],
                   one_time_keyboard: true,
                   resize_keyboard: true
                 }
               });
             }
-          }
-          
-          // NEW: Category selection
-          else if (session.step === 'cleaning_category') {
-            if (text === '🔙 Back') {
-              session.step = 'cleaning_action';
-              
-              const keyboard = [
-                [{text: '🏠 Bungalow Ready'}],
-                [{text: '🔧 Maintenance Required'}],
-                [{text: '📦 Missing Items'}],
-                [{text: '🔙 Back to Menu'}]
-              ];
-              
-              bot.sendMessage(chatId, `✅ Bungalow: ${session.bungalow}\n\n🎯 Choose action:`, {
-                reply_markup: {
-                  keyboard: keyboard,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-              return;
-            }
-            
+          } else if (session.step === 'category_selection') {
             let category = '';
             if (text === '🍽️ Kitchen') category = 'kitchen';
             else if (text === '🏠 Outdoor') category = 'outdoor';
@@ -370,11 +839,11 @@ cleanBot.deleteWebHook().then(() => {
             
             if (category) {
               session.selectedCategory = category;
-              session.step = 'cleaning_item';
+              session.step = 'item_selection';
               
               const items = cleaningItems[category];
               const keyboard = items.map(item => [{text: item}]);
-              keyboard.push([{text: '🔙 Back to categories'}]);
+              keyboard.push([{text: '🔙 Back'}, {text: '🔙 Back to Menu'}]);
               
               bot.sendMessage(chatId, `Choose missing item (${text}):`, {
                 reply_markup: {
@@ -384,25 +853,20 @@ cleanBot.deleteWebHook().then(() => {
                 }
               });
             }
-          }
-          
-          // NEW: Item selection
-          else if (session.step === 'cleaning_item') {
-            if (text === '🔙 Back to categories') {
-              session.step = 'cleaning_category';
-              
-              const keyboard = [
-                [{text: '🍽️ Kitchen'}],
-                [{text: '🏠 Outdoor'}],
-                [{text: '🧹 Cleaning'}],
-                [{text: '🛏️ Bedding'}],
-                [{text: '🚽 Toilet'}],
-                [{text: '🔙 Back'}]
-              ];
+          } else if (session.step === 'item_selection') {
+            if (text === '🔙 Back') {
+              session.step = 'category_selection';
               
               bot.sendMessage(chatId, '📦 Choose category:', {
                 reply_markup: {
-                  keyboard: keyboard,
+                  keyboard: [
+                    [{text: '🍽️ Kitchen'}],
+                    [{text: '🏠 Outdoor'}],
+                    [{text: '🧹 Cleaning'}],
+                    [{text: '🛏️ Bedding'}],
+                    [{text: '🚽 Toilet'}],
+                    [{text: '🔙 Back to Menu'}]
+                  ],
                   one_time_keyboard: true,
                   resize_keyboard: true
                 }
@@ -411,20 +875,20 @@ cleanBot.deleteWebHook().then(() => {
             }
             
             session.selectedItem = text;
-            session.step = 'cleaning_quantity';
+            session.step = 'quantity_input';
             
             bot.sendMessage(chatId, `📊 How many "${text}" are missing?\n\nEnter a number:`, {
-              reply_markup: {remove_keyboard: true}
+              reply_markup: {
+                keyboard: [[{text: '🔙 Back to Menu'}]],
+                one_time_keyboard: true,
+                resize_keyboard: true
+              }
             });
-          }
-          
-          // NEW: Quantity input
-          else if (session.step === 'cleaning_quantity') {
+          } else if (session.step === 'quantity_input') {
             const quantity = parseInt(text);
             if (quantity && quantity > 0) {
               session.selectedQuantity = quantity;
               
-              // Add item to session
               session.items.push({
                 item: session.selectedItem,
                 quantity: session.selectedQuantity,
@@ -432,7 +896,7 @@ cleanBot.deleteWebHook().then(() => {
                 notes: ''
               });
               
-              session.step = 'cleaning_continue';
+              session.step = 'continue_choice';
               
               const summary = session.items.map((item, index) => 
                 `${index + 1}. ${item.item} x${item.quantity}`
@@ -443,9 +907,9 @@ cleanBot.deleteWebHook().then(() => {
                 reply_markup: {
                   keyboard: [
                     [{text: '➕ Add Another Item'}],
-                    [{text: '📝 Add Note'}],
                     [{text: '📤 Send Report'}],
-                    [{text: '🗑️ Cancel All'}]
+                    [{text: '🗑️ Cancel All'}],
+                    [{text: '🔙 Back to Menu'}]
                   ],
                   one_time_keyboard: true,
                   resize_keyboard: true
@@ -454,55 +918,28 @@ cleanBot.deleteWebHook().then(() => {
             } else {
               bot.sendMessage(chatId, '❌ Enter a valid number (ex: 1, 2, 3...)');
             }
-          }
-          
-          // NEW: Continue options
-          else if (session.step === 'cleaning_continue') {
+          } else if (session.step === 'continue_choice') {
             if (text === '➕ Add Another Item') {
-              session.step = 'cleaning_category';
-              
-              const keyboard = [
-                [{text: '🍽️ Kitchen'}],
-                [{text: '🏠 Outdoor'}],
-                [{text: '🧹 Cleaning'}],
-                [{text: '🛏️ Bedding'}],
-                [{text: '🚽 Toilet'}],
-                [{text: '🔙 Back'}]
-              ];
+              session.step = 'category_selection';
               
               bot.sendMessage(chatId, '📦 Choose category for next item:', {
                 reply_markup: {
-                  keyboard: keyboard,
+                  keyboard: [
+                    [{text: '🍽️ Kitchen'}],
+                    [{text: '🏠 Outdoor'}],
+                    [{text: '🧹 Cleaning'}],
+                    [{text: '🛏️ Bedding'}],
+                    [{text: '🚽 Toilet'}],
+                    [{text: '🔙 Back to Menu'}]
+                  ],
                   one_time_keyboard: true,
                   resize_keyboard: true
                 }
               });
-            }
-            else if (text === '📝 Add Note') {
-              session.step = 'cleaning_notes';
-              
-              const keyboard = [
-                [{text: '❌ No Note'}],
-                [{text: '🏠 Bungalow Ready'}],
-                [{text: '🔧 For Maintenance'}]
-              ];
-              
-              // Remove "Bungalow Ready" option if no kitchen items
-              if (!session.items.some(item => item.category === 'kitchen')) {
-                keyboard.splice(1, 1);
-              }
-              
-              bot.sendMessage(chatId, '💡 Add a note?\n\nChoose or type your note:', {
-                reply_markup: {
-                  keyboard: keyboard,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-            }
-            else if (text === '📤 Send Report') {
+            } else if (text === '📤 Send Report') {
               let successCount = 0;
               
+              // ENVOI À GOOGLE SHEETS: Tous les objets manquants
               for (const item of session.items) {
                 try {
                   await sendToGoogleSheets({
@@ -510,10 +947,11 @@ cleanBot.deleteWebHook().then(() => {
                     item: item.item,
                     quantity: item.quantity,
                     category: item.category,
-                    notes: item.notes,
+                    notes: `Missing item reported during cleaning`,
                     priority: 'normal',
                     reportedBy: msg.from.first_name || 'User',
-                    section: 'cleaning'
+                    section: 'cleaning',
+                    timestamp: new Date().toISOString()
                   });
                   successCount++;
                 } catch (error) {
@@ -522,689 +960,140 @@ cleanBot.deleteWebHook().then(() => {
               }
               
               const summary = session.items.map((item, index) => 
-                `${index + 1}. ${item.item} x${item.quantity}${item.notes ? ` (${item.notes})` : ''}`
+                `${index + 1}. ${item.item} x${item.quantity}`
               ).join('\n');
               
-              bot.sendMessage(chatId, `🎉 *Report sent successfully!*\n\n🏠 Bungalow: ${session.bungalow}\n📦 ${successCount} items reported:\n\n${summary}\n\n/menu to return`, {
+              bot.sendMessage(chatId, `🎉 *Missing Items Report Sent!*\n\n🏠 Bungalow: ${session.bungalow}\n📦 ${successCount} items reported:\n\n${summary}\n\n✅ All items added to system\n\n/menu to return`, {
                 parse_mode: 'Markdown',
                 reply_markup: {remove_keyboard: true}
               });
               
               delete userSessions[chatId];
-            }
-            else if (text === '🗑️ Cancel All') {
-              bot.sendMessage(chatId, '❌ Report cancelled.\n\n/menu to return', {
+            } else if (text === '🗑️ Cancel All') {
+              bot.sendMessage(chatId, '❌ Report cancelled. No data sent.\n\n/menu to return', {
                 reply_markup: {remove_keyboard: true}
               });
               delete userSessions[chatId];
             }
           }
-          
-          // NEW: Notes handling
-          else if (session.step === 'cleaning_notes') {
-            const note = text === '❌ No Note' ? '' : text.replace(/🏠 |🔧 |❌ /, '');
-            
-            // Apply note to all items
-            session.items.forEach(item => {
-              item.notes = note;
-            });
-            
-            session.step = 'cleaning_continue';
-            
-            const summary = session.items.map((item, index) => 
-              `${index + 1}. ${item.item} x${item.quantity}${item.notes ? ` (${item.notes})` : ''}`
-            ).join('\n');
-            
-            bot.sendMessage(chatId, `✅ Note added!\n\n📋 *Final Summary ${session.bungalow}:*\n${summary}\n\nReady to send?`, {
-              parse_mode: 'Markdown',
-              reply_markup: {
-                keyboard: [
-                  [{text: '📤 Send Report'}],
-                  [{text: '➕ Add Another Item'}],
-                  [{text: '🗑️ Cancel All'}]
-                ],
-                one_time_keyboard: true,
-                resize_keyboard: true
-              }
-            });
-          }
         }
         
-        // INVENTORY SECTION - MISSING ITEMS ONLY
+        // SECTION INVENTORY
         else if (session.section === 'inventory') {
-          
           if (session.step === 'inventory_choice') {
-            if (text === '🔙 Back to Menu') {
-              delete userSessions[chatId];
-              showMainMenu(chatId);
-              return;
-            }
-            
             if (text === '📦 Missing Items List') {
-              // Show missing items from cleaning reports
-              bot.sendMessage(chatId, `📋 *Missing Items from Cleaning Reports*\n\nLoading missing items...\n\nNote: This will show items reported as missing by cleaning team that need to be supplied to bungalows.`, {
-                parse_mode: 'Markdown',
-                reply_markup: {
-                  keyboard: [
-                    [{text: '🔄 Refresh List'}],
-                    [{text: '📦 Supply Item'}],
-                    [{text: '🔙 Back to Menu'}]
-                  ],
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-              session.step = 'missing_items_list';
-            }
-            else if (text === '📊 Check Stock') {
-              bot.sendMessage(chatId, `📊 *Current Stock Status*\n\n🍽️ **Kitchen:**\n• ☕ Mugs Grey: 12 ✅\n• ☕ Mugs White: 3 ⚠️\n• ☕ Mugs Brown: 8 ✅\n• 🍽️ Dinner Plates Beige: 6 ✅\n\n🪑 **Outdoor:**\n• Outside Chairs White: 8 ✅\n• Outside Chairs Black: 5 ⚠️\n• BBQ Fork: 2 ⚠️\n\n/menu to return`, {
-                parse_mode: 'Markdown',
-                reply_markup: {remove_keyboard: true}
-              });
-              delete userSessions[chatId];
-            }
-          }
-          
-          // NEW: Missing items list management
-          else if (session.step === 'missing_items_list') {
-            if (text === '🔙 Back to Menu') {
-              delete userSessions[chatId];
-              showMainMenu(chatId);
-              return;
-            }
-            
-            if (text === '🔄 Refresh List') {
-              // In real implementation, this would fetch from Google Sheets
-              // For now, show example missing items
-              bot.sendMessage(chatId, `📋 *Current Missing Items*\n\n🔵 Blue 15:\n• ☕ Mugs x2\n• 🍳 Frying Pan x1\n\n🟠 Orange 7:\n• 🧽 Toilet Brush x1\n• 💤 Pillow x1\n\n🤎 Brown 22:\n• 🥄 Spoons x4\n• 🔥 BBQ Gas x1\n\n*Select "Supply Item" to mark items as provided*`, {
-                parse_mode: 'Markdown',
-                reply_markup: {
-                  keyboard: [
-                    [{text: '📦 Supply Item'}],
-                    [{text: '🔄 Refresh List'}],
-                    [{text: '🔙 Back to Menu'}]
-                  ],
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-            }
-            else if (text === '📦 Supply Item') {
-              session.step = 'supply_bungalow';
+              bot.sendMessage(chatId, '🔄 Loading missing items from system...');
               
-              // In real implementation, these would come from Google Sheets
-              const keyboard = [
-                [{text: '🔵 Blue 15'}],
-                [{text: '🟠 Orange 7'}],
-                [{text: '🤎 Brown 22'}],
-                [{text: '🔙 Back'}]
-              ];
+              const missingItems = await fetchFromGoogleSheets('missingItems');
               
-              bot.sendMessage(chatId, '🏠 Which bungalow did you supply?', {
-                reply_markup: {
-                  keyboard: keyboard,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-            }
-          }
-          
-          // NEW: Supply bungalow selection
-          else if (session.step === 'supply_bungalow') {
-            if (text === '🔙 Back') {
-              session.step = 'missing_items_list';
-              
-              bot.sendMessage(chatId, `📋 *Missing Items from Cleaning Reports*\n\nSelect an option:`, {
-                parse_mode: 'Markdown',
-                reply_markup: {
-                  keyboard: [
-                    [{text: '🔄 Refresh List'}],
-                    [{text: '📦 Supply Item'}],
-                    [{text: '🔙 Back to Menu'}]
-                  ],
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-              return;
-            }
-            
-            session.selectedBungalow = text;
-            session.step = 'supply_item';
-            
-            // Show items for selected bungalow (in real implementation, from Google Sheets)
-            let items = [];
-            if (text === '🔵 Blue 15') {
-              items = [
-                [{text: '☕ Mugs x2'}],
-                [{text: '🍳 Frying Pan x1'}]
-              ];
-            } else if (text === '🟠 Orange 7') {
-              items = [
-                [{text: '🧽 Toilet Brush x1'}],
-                [{text: '💤 Pillow x1'}]
-              ];
-            } else if (text === '🤎 Brown 22') {
-              items = [
-                [{text: '🥄 Spoons x4'}],
-                [{text: '🔥 BBQ Gas x1'}]
-              ];
-            }
-            
-            items.push([{text: '🔙 Back to bungalows'}]);
-            
-            bot.sendMessage(chatId, `📦 What did you supply to ${text}?`, {
-              reply_markup: {
-                keyboard: items,
-                one_time_keyboard: true,
-                resize_keyboard: true
-              }
-            });
-          }
-          
-          // NEW: Supply item selection
-          else if (session.step === 'supply_item') {
-            if (text === '🔙 Back to bungalows') {
-              session.step = 'supply_bungalow';
-              
-              const keyboard = [
-                [{text: '🔵 Blue 15'}],
-                [{text: '🟠 Orange 7'}],
-                [{text: '🤎 Brown 22'}],
-                [{text: '🔙 Back'}]
-              ];
-              
-              bot.sendMessage(chatId, '🏠 Which bungalow did you supply?', {
-                reply_markup: {
-                  keyboard: keyboard,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-              return;
-            }
-            
-            session.suppliedItem = text;
-            session.step = 'supply_quantity';
-            
-            // Extract quantity from item name (e.g., "☕ Mugs x2" -> 2)
-            const match = text.match(/x(\d+)/);
-            const totalMissing = match ? parseInt(match[1]) : 1;
-            session.totalMissing = totalMissing;
-            
-            bot.sendMessage(chatId, `📦 ${text}\n\n📊 How many did you supply?\n\nTotal missing: ${totalMissing}\nEnter quantity (1-${totalMissing}):`, {
-              reply_markup: {remove_keyboard: true}
-            });
-          }
-          
-          // NEW: Supply quantity input
-          else if (session.step === 'supply_quantity') {
-            const suppliedQty = parseInt(text);
-            if (suppliedQty && suppliedQty > 0 && suppliedQty <= session.totalMissing) {
-              session.suppliedQuantity = suppliedQty;
-              session.step = 'supply_confirm';
-              
-              const remaining = session.totalMissing - suppliedQty;
-              const statusText = remaining > 0 ? 
-                `\n📊 Remaining needed: ${remaining}` : 
-                `\n✅ All items supplied - will be removed from list`;
-              
-              const keyboard = [
-                [{text: '✅ Confirm Supplied'}],
-                [{text: '📝 Add Note'}],
-                [{text: '🔙 Back to items'}],
-                [{text: '❌ Cancel'}]
-              ];
-              
-              bot.sendMessage(chatId, `✅ *Confirm Supply*\n\n🏠 Bungalow: ${session.selectedBungalow}\n📦 Item: ${session.suppliedItem}\n📊 Quantity supplied: ${suppliedQty}${statusText}\n\nConfirm?`, {
-                parse_mode: 'Markdown',
-                reply_markup: {
-                  keyboard: keyboard,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-            } else {
-              bot.sendMessage(chatId, `❌ Enter a valid number between 1 and ${session.totalMissing}`);
-            }
-          }
-          
-          // NEW: Supply confirmation with quantity logic
-          else if (session.step === 'supply_confirm') {
-            if (text === '✅ Confirm Supplied') {
-              const remaining = session.totalMissing - session.suppliedQuantity;
-              const itemName = session.suppliedItem.replace(/x\d+/, '').trim();
-              
-              // Send supply record to Google Sheets
-              await sendToGoogleSheets({
-                bungalow: session.selectedBungalow,
-                item: itemName,
-                quantity: session.suppliedQuantity,
-                category: 'supplied',
-                notes: `Item supplied by ${msg.from.first_name}${session.supplyNote ? ` - ${session.supplyNote}` : ''}. Original missing: ${session.totalMissing}, Supplied: ${session.suppliedQuantity}, Remaining: ${remaining}`,
-                priority: remaining > 0 ? 'partial' : 'completed',
-                reportedBy: msg.from.first_name || 'User',
-                section: 'inventory_supply',
-                action: 'item_supplied',
-                originalMissing: session.totalMissing,
-                quantitySupplied: session.suppliedQuantity,
-                quantityRemaining: remaining
-              });
-              
-              // If there are remaining items, update the missing items list
-              if (remaining > 0) {
-                await sendToGoogleSheets({
-                  bungalow: session.selectedBungalow,
-                  item: itemName,
-                  quantity: remaining,
-                  category: 'missing',
-                  notes: `Updated quantity after partial supply. Originally ${session.totalMissing}, supplied ${session.suppliedQuantity}`,
-                  priority: 'normal',
-                  reportedBy: 'System Update',
-                  section: 'cleaning',
-                  action: 'quantity_updated'
+              if (!missingItems || missingItems.length === 0) {
+                bot.sendMessage(chatId, '✅ *No Missing Items!*\n\nAll bungalows have complete inventory.\n\n/menu to return', {
+                  parse_mode: 'Markdown',
+                  reply_markup: {remove_keyboard: true}
                 });
+                delete userSessions[chatId];
+                return;
               }
               
-              const statusMessage = remaining > 0 ? 
-                `📊 ${remaining} ${itemName} still needed for this bungalow.\n✨ Missing items list updated.` :
-                `✨ All items supplied! This item has been removed from the missing items list.`;
-              
-              bot.sendMessage(chatId, `✅ *Supply Recorded Successfully!*\n\n🏠 Bungalow: ${session.selectedBungalow}\n📦 Item: ${itemName}\n📊 Quantity supplied: ${session.suppliedQuantity}\n\n${statusMessage}\n\n/menu to return`, {
-                parse_mode: 'Markdown',
-                reply_markup: {remove_keyboard: true}
-              });
-              delete userSessions[chatId];
-            }
-            else if (text === '📝 Add Note') {
-              session.step = 'supply_note';
-              
-              bot.sendMessage(chatId, `📝 Add a note about this supply:\n\n(Or type "skip" to skip)`, {
-                reply_markup: {remove_keyboard: true}
-              });
-            }
-            else if (text === '🔙 Back to items') {
-              session.step = 'supply_item';
-              
-              // Show items for selected bungalow again
-              let items = [];
-              if (session.selectedBungalow === '🔵 Blue 15') {
-                items = [
-                  [{text: '☕ Mugs x2'}],
-                  [{text: '🍳 Frying Pan x1'}]
-                ];
-              } else if (session.selectedBungalow === '🟠 Orange 7') {
-                items = [
-                  [{text: '🧽 Toilet Brush x1'}],
-                  [{text: '💤 Pillow x1'}]
-                ];
-              } else if (session.selectedBungalow === '🤎 Brown 22') {
-                items = [
-                  [{text: '🥄 Spoons x4'}],
-                  [{text: '🔥 BBQ Gas x1'}]
-                ];
-              }
-              
-              items.push([{text: '🔙 Back to bungalows'}]);
-              
-              bot.sendMessage(chatId, `📦 What did you supply to ${session.selectedBungalow}?`, {
-                reply_markup: {
-                  keyboard: items,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
+              // Grouper par bungalow
+              const groupedItems = {};
+              missingItems.forEach(item => {
+                if (!groupedItems[item.bungalow]) {
+                  groupedItems[item.bungalow] = [];
                 }
+                groupedItems[item.bungalow].push(item);
               });
-            }
-            else if (text === '❌ Cancel') {
-              session.step = 'missing_items_list';
               
-              bot.sendMessage(chatId, `📋 *Missing Items from Cleaning Reports*\n\nSelect an option:`, {
+              let missingText = '📋 *Current Missing Items*\n\n';
+              
+              Object.entries(groupedItems).forEach(([bungalow, items]) => {
+                missingText += `${bungalow}:\n`;
+                items.forEach(item => {
+                  missingText += `• ${item.item} x${item.quantity}\n`;
+                });
+                missingText += '\n';
+              });
+              
+              bot.sendMessage(chatId, missingText + '*Select "Supply Item" to mark items as provided*', {
                 parse_mode: 'Markdown',
                 reply_markup: {
                   keyboard: [
-                    [{text: '🔄 Refresh List'}],
                     [{text: '📦 Supply Item'}],
-                    [{text: '🔙 Back to Menu'}]
-                  ],
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-            }
-          }
-          
-          // NEW: Supply note with updated confirmation
-          else if (session.step === 'supply_note') {
-            const note = text === 'skip' ? '' : text;
-            session.supplyNote = note;
-            session.step = 'supply_confirm';
-            
-            const remaining = session.totalMissing - session.suppliedQuantity;
-            const statusText = remaining > 0 ? 
-              `\n📊 Remaining needed: ${remaining}` : 
-              `\n✅ All items supplied - will be removed from list`;
-            
-            const keyboard = [
-              [{text: '✅ Confirm Supplied'}],
-              [{text: '🔙 Back to items'}],
-              [{text: '❌ Cancel'}]
-            ];
-            
-            bot.sendMessage(chatId, `✅ *Confirm Supply*\n\n🏠 Bungalow: ${session.selectedBungalow}\n📦 Item: ${session.suppliedItem}\n📊 Quantity supplied: ${session.suppliedQuantity}${note ? `\n📝 Note: ${note}` : ''}${statusText}\n\nConfirm?`, {
-              parse_mode: 'Markdown',
-              reply_markup: {
-                keyboard: keyboard,
-                one_time_keyboard: true,
-                resize_keyboard: true
-              }
-            });
-          }
-          
-          // NEW: Category selection for inventory
-          else if (session.step === 'inventory_category') {
-            if (text === '🔙 Back') {
-              session.step = 'inventory_choice';
-              
-              bot.sendMessage(chatId, '📦 *Inventory Section*\n\nChoose an action:', {
-                parse_mode: 'Markdown',
-                reply_markup: {
-                  keyboard: [
-                    [{text: '📦 Add Stock'}],
-                    [{text: '📊 Check Stock'}],
-                    [{text: '🔙 Back to Menu'}]
-                  ],
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-              return;
-            }
-            
-            let category = '';
-            if (text === '🧻 Supplies') category = 'supplies';
-            else if (text === '🔧 Maintenance Materials') category = 'maintenance';
-            
-            if (category) {
-              session.selectedCategory = category;
-              session.step = 'inventory_item';
-              
-              const items = inventoryItems[category];
-              const keyboard = items.map(item => [{text: item}]);
-              keyboard.push([{text: '🔙 Back to categories'}]);
-              
-              bot.sendMessage(chatId, `Choose item to add (${text}):`, {
-                reply_markup: {
-                  keyboard: keyboard,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-            }
-          }
-          
-          // NEW: Item selection for inventory
-          else if (session.step === 'inventory_item') {
-            if (text === '🔙 Back to categories') {
-              session.step = 'inventory_category';
-              
-              const keyboard = [
-                [{text: '🍽️ Kitchen Items'}],
-                [{text: '🧹 Cleaning Supplies'}],
-                [{text: '🛏️ Bedding'}],
-                [{text: '🏠 Outdoor'}],
-                [{text: '🚽 Toilet'}],
-                [{text: '🔙 Back'}]
-              ];
-              
-              bot.sendMessage(chatId, '📦 Choose category to add stock:', {
-                reply_markup: {
-                  keyboard: keyboard,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-              return;
-            }
-            
-            session.selectedItem = text;
-            session.step = 'inventory_quantity';
-            
-            bot.sendMessage(chatId, `📊 How many "${text}" do you want to add to stock?\n\nEnter a number:`, {
-              reply_markup: {remove_keyboard: true}
-            });
-          }
-          
-          // NEW: Quantity for inventory
-          else if (session.step === 'inventory_quantity') {
-            const quantity = parseInt(text);
-            if (quantity && quantity > 0) {
-              session.step = 'inventory_location';
-              session.selectedQuantity = quantity;
-              
-              const keyboard = [
-                [{text: '🏪 Main Storage'}],
-                [{text: '🧹 Cleaning Closet'}],
-                [{text: '🔧 Maintenance Room'}],
-                [{text: '🏠 Reception'}],
-                [{text: '📍 Other Location'}]
-              ];
-              
-              bot.sendMessage(chatId, `📍 Where are you adding ${quantity} x "${session.selectedItem}"?\n\nChoose storage location:`, {
-                reply_markup: {
-                  keyboard: keyboard,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-            } else {
-              bot.sendMessage(chatId, '❌ Enter a valid number (ex: 1, 5, 10, 25...)');
-            }
-          }
-          
-          // NEW: Location for inventory
-          else if (session.step === 'inventory_location') {
-            let location = '';
-            if (text === '🏪 Main Storage') location = 'Main Storage';
-            else if (text === '🧹 Cleaning Closet') location = 'Cleaning Closet';
-            else if (text === '🔧 Maintenance Room') location = 'Maintenance Room';
-            else if (text === '🏠 Reception') location = 'Reception';
-            else if (text === '📍 Other Location') {
-              session.step = 'inventory_custom_location';
-              bot.sendMessage(chatId, `📝 Enter custom location name:`, {
-                reply_markup: {remove_keyboard: true}
-              });
-              return;
-            } else {
-              location = text; // Custom location from previous step
-            }
-            
-            if (location) {
-              session.selectedLocation = location;
-              session.step = 'inventory_confirm';
-              
-              const keyboard = [
-                [{text: '✅ Confirm & Add'}],
-                [{text: '📝 Add Note'}],
-                [{text: '🔙 Change Location'}],
-                [{text: '❌ Cancel'}]
-              ];
-              
-              bot.sendMessage(chatId, `📋 *Stock Addition Summary:*\n\n📦 Item: ${session.selectedItem}\n📊 Quantity: ${session.selectedQuantity}\n📍 Location: ${location}\n\nConfirm this addition?`, {
-                parse_mode: 'Markdown',
-                reply_markup: {
-                  keyboard: keyboard,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-            }
-          }
-          
-          // NEW: Custom location input
-          else if (session.step === 'inventory_custom_location') {
-            session.selectedLocation = text;
-            session.step = 'inventory_confirm';
-            
-            const keyboard = [
-              [{text: '✅ Confirm & Add'}],
-              [{text: '📝 Add Note'}],
-              [{text: '🔙 Change Location'}],
-              [{text: '❌ Cancel'}]
-            ];
-            
-            bot.sendMessage(chatId, `📋 *Stock Addition Summary:*\n\n📦 Item: ${session.selectedItem}\n📊 Quantity: ${session.selectedQuantity}\n📍 Location: ${text}\n\nConfirm this addition?`, {
-              parse_mode: 'Markdown',
-              reply_markup: {
-                keyboard: keyboard,
-                one_time_keyboard: true,
-                resize_keyboard: true
-              }
-            });
-          }
-          
-          // NEW: Confirmation step
-          else if (session.step === 'inventory_confirm') {
-            if (text === '✅ Confirm & Add') {
-              await sendToGoogleSheets({
-                bungalow: 'General Stock',
-                item: session.selectedItem,
-                quantity: session.selectedQuantity,
-                category: session.selectedCategory,
-                notes: `Added to ${session.selectedLocation}${session.inventoryNote ? ` - ${session.inventoryNote}` : ''}`,
-                priority: 'normal',
-                reportedBy: msg.from.first_name || 'User',
-                section: 'inventory',
-                location: session.selectedLocation
-              });
-              
-              bot.sendMessage(chatId, `✅ *Stock updated successfully!*\n\n📦 Item: ${session.selectedItem}\n📊 Quantity added: ${session.selectedQuantity}\n📍 Location: ${session.selectedLocation}\n\n/menu to return`, {
-                parse_mode: 'Markdown',
-                reply_markup: {remove_keyboard: true}
-              });
-              delete userSessions[chatId];
-            }
-            else if (text === '📝 Add Note') {
-              session.step = 'inventory_note';
-              
-              bot.sendMessage(chatId, `📝 Add a note about this stock addition:\n\n(Or type "skip" to skip)`, {
-                reply_markup: {remove_keyboard: true}
-              });
-            }
-            else if (text === '🔙 Change Location') {
-              session.step = 'inventory_location';
-              
-              const keyboard = [
-                [{text: '🏪 Main Storage'}],
-                [{text: '🧹 Cleaning Closet'}],
-                [{text: '🔧 Maintenance Room'}],
-                [{text: '🏠 Reception'}],
-                [{text: '📍 Other Location'}]
-              ];
-              
-              bot.sendMessage(chatId, `📍 Choose new storage location:`, {
-                reply_markup: {
-                  keyboard: keyboard,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-            }
-            else if (text === '❌ Cancel') {
-              bot.sendMessage(chatId, '❌ Stock addition cancelled.\n\n/menu to return', {
-                reply_markup: {remove_keyboard: true}
-              });
-              delete userSessions[chatId];
-            }
-          }
-          
-          // NEW: Note adding
-          else if (session.step === 'inventory_note') {
-            const note = text === 'skip' ? '' : text;
-            session.inventoryNote = note;
-            session.step = 'inventory_confirm';
-            
-            const keyboard = [
-              [{text: '✅ Confirm & Add'}],
-              [{text: '🔙 Change Location'}],
-              [{text: '❌ Cancel'}]
-            ];
-            
-            bot.sendMessage(chatId, `📋 *Stock Addition Summary:*\n\n📦 Item: ${session.selectedItem}\n📊 Quantity: ${session.selectedQuantity}\n📍 Location: ${session.selectedLocation}${note ? `\n📝 Note: ${note}` : ''}\n\nConfirm this addition?`, {
-              parse_mode: 'Markdown',
-              reply_markup: {
-                keyboard: keyboard,
-                one_time_keyboard: true,
-                resize_keyboard: true
-              }
-            });
-          }
-        }
-        
-        // MAINTENANCE SECTION - COMPLETE
-        else if (session.section === 'maintenance') {
-          
-          if (session.step === 'maintenance_choice') {
-            if (text === '🔙 Back to Menu') {
-              delete userSessions[chatId];
-              showMainMenu(chatId);
-              return;
-            }
-            
-            if (text === '🔧 Pending Repairs') {
-              // Show maintenance issues from cleaning reports and maintenance reports
-              bot.sendMessage(chatId, `🔧 *Pending Maintenance Issues*\n\nLoading pending repairs...\n\nNote: This shows all maintenance issues reported by cleaning team and direct maintenance reports.`, {
-                parse_mode: 'Markdown',
-                reply_markup: {
-                  keyboard: [
                     [{text: '🔄 Refresh List'}],
-                    [{text: '✅ Mark as Repaired'}],
                     [{text: '🔙 Back to Menu'}]
                   ],
                   one_time_keyboard: true,
                   resize_keyboard: true
                 }
               });
-              session.step = 'pending_repairs_list';
-            }
-            else if (text === '➕ Report New Issue') {
-              session.step = 'maintenance_color';
+              session.step = 'missing_items_view';
+              session.missingItemsData = groupedItems;
+            } else if (text === '📊 Check Stock') {
+              bot.sendMessage(chatId, '🔄 Loading stock data...');
               
-              const keyboard = colors.map(color => [{text: color}]);
-              bot.sendMessage(chatId, '🔧 *Report New Issue*\n\n🎨 Choose bungalow color:', {
-                parse_mode: 'Markdown',
-                reply_markup: {
-                  keyboard: keyboard,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
+              const stockData = await fetchFromGoogleSheets('stock');
+              
+              if (!stockData || stockData.length === 0) {
+                bot.sendMessage(chatId, '📊 *Stock Data*\n\nNo stock data available in system.\n\n/menu to return', {
+                  parse_mode: 'Markdown',
+                  reply_markup: {remove_keyboard: true}
+                });
+                delete userSessions[chatId];
+                return;
+              }
+              
+              let stockText = '📊 *Current Stock Status*\n\n';
+              
+              stockData.forEach(item => {
+                const status = item.quantity > 5 ? '✅' : item.quantity > 2 ? '⚠️' : '❌';
+                stockText += `• ${item.item}: ${item.quantity} ${status}\n`;
               });
-            }
-            else if (text === '📊 Maintenance Log') {
-              bot.sendMessage(chatId, `📊 *Maintenance Log*\n\n✅ **Recently Completed:**\n• 🔵 Blue 12 - Electrical fixed\n• 🟠 Orange 5 - Plumbing repaired\n• 🤎 Brown 18 - Door handle fixed\n\n⏳ **In Progress:**\n• 🟡 Yellow 9 - BBQ repair\n• 🔘 Grey 14 - Shower head replacement\n\n/menu to return`, {
+              
+              bot.sendMessage(chatId, stockText + '\n/menu to return', {
                 parse_mode: 'Markdown',
                 reply_markup: {remove_keyboard: true}
               });
               delete userSessions[chatId];
             }
-          }
-          
-          // NEW: Pending repairs list management
-          else if (session.step === 'pending_repairs_list') {
-            if (text === '🔙 Back to Menu') {
-              delete userSessions[chatId];
-              showMainMenu(chatId);
-              return;
-            }
-            
+          } else if (session.step === 'missing_items_view') {
             if (text === '🔄 Refresh List') {
-              // In real implementation, this would fetch from Google Sheets
-              // Show example pending maintenance issues
-              bot.sendMessage(chatId, `🔧 *Current Pending Repairs*\n\n🔵 Blue 8:\n• 🔧 Urgent: Door lock broken\n• ⚡ High: Electrical outlet not working\n\n🟠 Orange 15:\n• 🚿 High: Shower head leaking\n• 🧹 Normal: Deep cleaning needed\n\n🤎 Brown 3:\n• 🔧 Urgent: Window won't close\n• 🚪 Normal: Squeaky door\n\n🟡 Yellow 21:\n• 🔥 High: BBQ gas connection issue\n\n*Select "Mark as Repaired" to complete repairs*`, {
+              bot.sendMessage(chatId, '🔄 Refreshing missing items list...');
+              
+              const missingItems = await fetchFromGoogleSheets('missingItems');
+              
+              if (!missingItems || missingItems.length === 0) {
+                bot.sendMessage(chatId, '✅ *No Missing Items!*\n\nAll items have been supplied!\n\n/menu to return', {
+                  parse_mode: 'Markdown',
+                  reply_markup: {remove_keyboard: true}
+                });
+                delete userSessions[chatId];
+                return;
+              }
+              
+              // Regrouper par bungalow
+              const groupedItems = {};
+              missingItems.forEach(item => {
+                if (!groupedItems[item.bungalow]) {
+                  groupedItems[item.bungalow] = [];
+                }
+                groupedItems[item.bungalow].push(item);
+              });
+              
+              let missingText = '📋 *Updated Missing Items*\n\n';
+              
+              Object.entries(groupedItems).forEach(([bungalow, items]) => {
+                missingText += `${bungalow}:\n`;
+                items.forEach(item => {
+                  missingText += `• ${item.item} x${item.quantity}\n`;
+                });
+                missingText += '\n';
+              });
+              
+              bot.sendMessage(chatId, missingText + '*Select "Supply Item" to mark items as provided*', {
                 parse_mode: 'Markdown',
                 reply_markup: {
                   keyboard: [
-                    [{text: '✅ Mark as Repaired'}],
+                    [{text: '📦 Supply Item'}],
                     [{text: '🔄 Refresh List'}],
                     [{text: '🔙 Back to Menu'}]
                   ],
@@ -1212,20 +1101,14 @@ cleanBot.deleteWebHook().then(() => {
                   resize_keyboard: true
                 }
               });
-            }
-            else if (text === '✅ Mark as Repaired') {
-              session.step = 'repair_bungalow';
+              session.missingItemsData = groupedItems;
+            } else if (text === '📦 Supply Item') {
+              session.step = 'supply_bungalow';
               
-              // In real implementation, these would come from Google Sheets
-              const keyboard = [
-                [{text: '🔵 Blue 8'}],
-                [{text: '🟠 Orange 15'}],
-                [{text: '🤎 Brown 3'}],
-                [{text: '🟡 Yellow 21'}],
-                [{text: '🔙 Back'}]
-              ];
+              const keyboard = Object.keys(session.missingItemsData).map(bungalow => [{text: bungalow}]);
+              keyboard.push([{text: '🔙 Back'}, {text: '🔙 Back to Menu'}]);
               
-              bot.sendMessage(chatId, '🏠 Which bungalow did you repair?', {
+              bot.sendMessage(chatId, '🏠 Which bungalow did you supply?', {
                 reply_markup: {
                   keyboard: keyboard,
                   one_time_keyboard: true,
@@ -1233,322 +1116,3 @@ cleanBot.deleteWebHook().then(() => {
                 }
               });
             }
-          }
-          
-          // NEW: Repair bungalow selection
-          else if (session.step === 'repair_bungalow') {
-            if (text === '🔙 Back') {
-              session.step = 'pending_repairs_list';
-              
-              bot.sendMessage(chatId, `🔧 *Pending Maintenance Issues*\n\nSelect an option:`, {
-                parse_mode: 'Markdown',
-                reply_markup: {
-                  keyboard: [
-                    [{text: '🔄 Refresh List'}],
-                    [{text: '✅ Mark as Repaired'}],
-                    [{text: '🔙 Back to Menu'}]
-                  ],
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-              return;
-            }
-            
-            session.selectedBungalow = text;
-            session.step = 'repair_issue';
-            
-            // Show issues for selected bungalow (in real implementation, from Google Sheets)
-            let issues = [];
-            if (text === '🔵 Blue 8') {
-              issues = [
-                [{text: '🔧 Door lock broken'}],
-                [{text: '⚡ Electrical outlet not working'}]
-              ];
-            } else if (text === '🟠 Orange 15') {
-              issues = [
-                [{text: '🚿 Shower head leaking'}],
-                [{text: '🧹 Deep cleaning needed'}]
-              ];
-            } else if (text === '🤎 Brown 3') {
-              issues = [
-                [{text: '🔧 Window won\'t close'}],
-                [{text: '🚪 Squeaky door'}]
-              ];
-            } else if (text === '🟡 Yellow 21') {
-              issues = [
-                [{text: '🔥 BBQ gas connection issue'}]
-              ];
-            }
-            
-            issues.push([{text: '🔙 Back to bungalows'}]);
-            
-            bot.sendMessage(chatId, `🔧 What did you repair in ${text}?`, {
-              reply_markup: {
-                keyboard: issues,
-                one_time_keyboard: true,
-                resize_keyboard: true
-              }
-            });
-          }
-          
-          // NEW: Repair issue selection
-          else if (session.step === 'repair_issue') {
-            if (text === '🔙 Back to bungalows') {
-              session.step = 'repair_bungalow';
-              
-              const keyboard = [
-                [{text: '🔵 Blue 8'}],
-                [{text: '🟠 Orange 15'}],
-                [{text: '🤎 Brown 3'}],
-                [{text: '🟡 Yellow 21'}],
-                [{text: '🔙 Back'}]
-              ];
-              
-              bot.sendMessage(chatId, '🏠 Which bungalow did you repair?', {
-                reply_markup: {
-                  keyboard: keyboard,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-              return;
-            }
-            
-            session.repairedIssue = text;
-            session.step = 'repair_confirm';
-            
-            const keyboard = [
-              [{text: '✅ Confirm Repaired'}],
-              [{text: '📝 Add Repair Note'}],
-              [{text: '🔙 Back to issues'}],
-              [{text: '❌ Cancel'}]
-            ];
-            
-            bot.sendMessage(chatId, `✅ *Confirm Repair*\n\n🏠 Bungalow: ${session.selectedBungalow}\n🔧 Issue: ${text}\n\nConfirm that you completed this repair?`, {
-              parse_mode: 'Markdown',
-              reply_markup: {
-                keyboard: keyboard,
-                one_time_keyboard: true,
-                resize_keyboard: true
-              }
-            });
-          }
-          
-          // NEW: Repair confirmation with complete Google Sheets integration
-          else if (session.step === 'repair_confirm') {
-            if (text === '✅ Confirm Repaired') {
-              // Mark repair as completed and remove from pending list
-              await sendToGoogleSheets({
-                bungalow: session.selectedBungalow,
-                item: session.repairedIssue,
-                quantity: 1,
-                category: 'repaired',
-                notes: `Repair completed by ${msg.from.first_name}${session.repairNote ? ` - ${session.repairNote}` : ''}`,
-                priority: 'completed',
-                reportedBy: msg.from.first_name || 'User',
-                section: 'maintenance_repair',
-                action: 'repair_completed'
-              });
-              
-              // Also log the completion for maintenance tracking
-              await sendToGoogleSheets({
-                bungalow: session.selectedBungalow,
-                item: `${session.repairedIssue} - COMPLETED`,
-                quantity: 1,
-                category: 'maintenance_log',
-                notes: `Completion logged. Original issue: ${session.repairedIssue}. Repaired by: ${msg.from.first_name}${session.repairNote ? `. Details: ${session.repairNote}` : ''}`,
-                priority: 'logged',
-                reportedBy: msg.from.first_name || 'User',
-                section: 'maintenance_log',
-                action: 'repair_logged'
-              });
-              
-              bot.sendMessage(chatId, `✅ *Repair Completed Successfully!*\n\n🏠 Bungalow: ${session.selectedBungalow}\n🔧 Issue: ${session.repairedIssue}\n\n✨ This issue has been:\n• Removed from pending repairs\n• Added to maintenance completion log\n• Marked as resolved in system\n\n/menu to return`, {
-                parse_mode: 'Markdown',
-                reply_markup: {remove_keyboard: true}
-              });
-              delete userSessions[chatId];
-            }
-            else if (text === '📝 Add Repair Note') {
-              session.step = 'repair_note';
-              
-              bot.sendMessage(chatId, `📝 Add details about this repair:\n\n(Or type "skip" to skip)`, {
-                reply_markup: {remove_keyboard: true}
-              });
-            }
-            else if (text === '🔙 Back to issues') {
-              session.step = 'repair_issue';
-              
-              // Show issues for selected bungalow again
-              let issues = [];
-              if (session.selectedBungalow === '🔵 Blue 8') {
-                issues = [
-                  [{text: '🔧 Door lock broken'}],
-                  [{text: '⚡ Electrical outlet not working'}]
-                ];
-              } else if (session.selectedBungalow === '🟠 Orange 15') {
-                issues = [
-                  [{text: '🚿 Shower head leaking'}],
-                  [{text: '🧹 Deep cleaning needed'}]
-                ];
-              } else if (session.selectedBungalow === '🤎 Brown 3') {
-                issues = [
-                  [{text: '🔧 Window won\'t close'}],
-                  [{text: '🚪 Squeaky door'}]
-                ];
-              } else if (session.selectedBungalow === '🟡 Yellow 21') {
-                issues = [
-                  [{text: '🔥 BBQ gas connection issue'}]
-                ];
-              }
-              
-              issues.push([{text: '🔙 Back to bungalows'}]);
-              
-              bot.sendMessage(chatId, `🔧 What did you repair in ${session.selectedBungalow}?`, {
-                reply_markup: {
-                  keyboard: issues,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-            }
-            else if (text === '❌ Cancel') {
-              session.step = 'pending_repairs_list';
-              
-              bot.sendMessage(chatId, `🔧 *Pending Maintenance Issues*\n\nSelect an option:`, {
-                parse_mode: 'Markdown',
-                reply_markup: {
-                  keyboard: [
-                    [{text: '🔄 Refresh List'}],
-                    [{text: '✅ Mark as Repaired'}],
-                    [{text: '🔙 Back to Menu'}]
-                  ],
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-            }
-          }
-          
-          // NEW: Repair note
-          else if (session.step === 'repair_note') {
-            const note = text === 'skip' ? '' : text;
-            session.repairNote = note;
-            session.step = 'repair_confirm';
-            
-            const keyboard = [
-              [{text: '✅ Confirm Repaired'}],
-              [{text: '🔙 Back to issues'}],
-              [{text: '❌ Cancel'}]
-            ];
-            
-            bot.sendMessage(chatId, `✅ *Confirm Repair*\n\n🏠 Bungalow: ${session.selectedBungalow}\n🔧 Issue: ${session.repairedIssue}${note ? `\n📝 Details: ${note}` : ''}\n\nConfirm that you completed this repair?`, {
-              parse_mode: 'Markdown',
-              reply_markup: {
-                keyboard: keyboard,
-                one_time_keyboard: true,
-                resize_keyboard: true
-              }
-            });
-          }
-          
-          // Original maintenance flow for new issues
-          else if (session.step === 'maintenance_color') {
-            if (colors.some(color => color === text)) {
-              session.selectedColor = text;
-              session.step = 'maintenance_number';
-              
-              bot.sendMessage(chatId, `🔢 Enter bungalow number for ${text}:\n\n(Ex: 1, 20, 15...)`, {
-                reply_markup: {remove_keyboard: true}
-              });
-            } else {
-              bot.sendMessage(chatId, '❌ Please choose a color from the list!');
-            }
-          }
-          else if (session.step === 'maintenance_number') {
-            const number = parseInt(text);
-            if (number && number > 0) {
-              session.bungalow = `${session.selectedColor} ${number}`;
-              session.step = 'maintenance_type';
-              
-              const keyboard = [
-                [{text: '🔧 Urgent Repair'}],
-                [{text: '⚡ Electrical Issue'}],
-                [{text: '🚿 Plumbing Issue'}],
-                [{text: '🚪 Door/Window Issue'}],
-                [{text: '🧹 Special Cleaning'}],
-                [{text: '🔙 Back to Menu'}]
-              ];
-              
-              bot.sendMessage(chatId, `🔧 Bungalow: ${session.bungalow}\n\nType of problem:`, {
-                reply_markup: {
-                  keyboard: keyboard,
-                  one_time_keyboard: true,
-                  resize_keyboard: true
-                }
-              });
-            } else {
-              bot.sendMessage(chatId, '❌ Enter a valid number (ex: 1, 20, 15...)');
-            }
-          }
-          else if (session.step === 'maintenance_type') {
-            if (text === '🔙 Back to Menu') {
-              delete userSessions[chatId];
-              showMainMenu(chatId);
-              return;
-            }
-            
-            session.selectedType = text;
-            session.step = 'maintenance_description';
-            
-            bot.sendMessage(chatId, `📝 Describe the problem in detail:\n\n(Or type "skip" to skip description)`, {
-              reply_markup: {remove_keyboard: true}
-            });
-          }
-          else if (session.step === 'maintenance_description') {
-            const description = text === 'skip' ? '' : text;
-            
-            let priority = 'normal';
-            if (session.selectedType.includes('Urgent')) {
-              priority = 'urgent';
-            } else if (session.selectedType.includes('Electrical') || 
-                       session.selectedType.includes('Plumbing')) {
-              priority = 'high';
-            }
-            
-            await sendToGoogleSheets({
-              bungalow: session.bungalow,
-              item: session.selectedType,
-              quantity: 1,
-              category: 'maintenance',
-              notes: description,
-              priority: priority,
-              reportedBy: msg.from.first_name || 'User',
-              section: 'maintenance',
-              action: 'new_issue_reported'
-            });
-            
-            bot.sendMessage(chatId, `🔧 *New Issue Reported!*\n\n🏠 Bungalow: ${session.bungalow}\n🔧 Type: ${session.selectedType}\n📝 Description: ${description || 'None'}\n⚠️ Priority: ${priority}\n\n✨ This issue has been added to pending repairs list.\n\n/menu to return`, {
-              parse_mode: 'Markdown',
-              reply_markup: {remove_keyboard: true}
-            });
-            delete userSessions[chatId];
-          }
-        }
-      }
-    });
-    
-    bot.on('error', (error) => {
-      console.error('Bot error:', error);
-    });
-    
-    bot.on('polling_error', (error) => {
-      console.error('Polling error:', error);
-    });
-    
-  }, 2000);
-  
-}).catch((error) => {
-  console.error('❌ Cleanup error:', error);
-});
