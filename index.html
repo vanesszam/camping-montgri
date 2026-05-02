@@ -1077,9 +1077,18 @@ function openTicketModal(key) {
     actionBtn ? () => {} : null
   );
   // Override modal actions with proper buttons
-  document.getElementById('modalActions').innerHTML = `
-    <button class="btn btn-ghost" onclick="closeModal()">Close</button>
-    ${actionBtn}`;
+  const _mActions = document.getElementById('modalActions');
+  _mActions.innerHTML = '';
+  const _closeBtn2 = document.createElement('button');
+  _closeBtn2.className = 'btn btn-ghost';
+  _closeBtn2.textContent = 'Close';
+  _closeBtn2.onclick = closeModal;
+  _mActions.appendChild(_closeBtn2);
+  if (actionBtn) {
+    const _tmpDiv = document.createElement('div');
+    _tmpDiv.innerHTML = actionBtn;
+    if (_tmpDiv.firstChild) _mActions.appendChild(_tmpDiv.firstChild);
+  }
 }
 
 function renderDashSchedule() {
@@ -2047,12 +2056,29 @@ function openModal(title, body, onSave) {
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalBody').innerHTML = body;
   _modalCb = onSave;
-  document.getElementById('modalActions').innerHTML = `
-    <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-    ${onSave?`<button class="btn btn-primary" onclick="_modalCb&&_modalCb()">Save</button>`:''}`;
+  const actions = document.getElementById('modalActions');
+  actions.innerHTML = '';
+  
+  const cancelBtn = document.createElement('button');
+  cancelBtn.className = 'btn btn-ghost';
+  cancelBtn.textContent = 'Cancel';
+  cancelBtn.onclick = closeModal;
+  actions.appendChild(cancelBtn);
+  
+  if (onSave) {
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'btn btn-primary';
+    saveBtn.textContent = 'Save';
+    saveBtn.onclick = function() { if (_modalCb) _modalCb(); };
+    actions.appendChild(saveBtn);
+  }
+  
   document.getElementById('modalOverlay').classList.add('open');
 }
-function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); _modalCb=null; }
+function closeModal() { 
+  document.getElementById('modalOverlay').classList.remove('open'); 
+  _modalCb = null; 
+}
 
 // ══ NOTIFICATIONS ════════════════════════════════════════════════════════════
 function updateNotifDot() {
