@@ -73,6 +73,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .topbar h1{font-size:18px;font-weight:700}
 .topbar-actions{display:flex;gap:10px;align-items:center}
 .content{padding:24px;flex:1}
+@media(max-width:640px){.content{padding:12px 12px 80px!important}}
 .panel{display:none}.panel.active{display:block}
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px}
@@ -202,7 +203,69 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .fb-loading{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--text2);font-size:13px;gap:10px}
 .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:640px){.sidebar{display:none}}
+@media(max-width:640px){
+  .sidebar{display:none}
+  .desktop-only{display:none!important}
+  .mobile-only{display:flex!important}
+  .content{padding:12px!important}
+  .stats-grid{grid-template-columns:1fr 1fr!important;gap:8px!important}
+  .stat-card{padding:12px!important}
+  .stat-card .num{font-size:20px!important}
+}
+@media(min-width:641px){
+  .mobile-only{display:none!important}
+}
+/* MOBILE BUTTONS */
+.mobile-action-btn{
+  display:flex;align-items:center;gap:16px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:18px 20px;cursor:pointer;
+  transition:all .2s;width:100%;text-align:left;
+  margin-bottom:12px;
+}
+.mobile-action-btn:hover,.mobile-action-btn:active{border-color:var(--accent);background:var(--surface2)}
+.mobile-action-btn .mab-icon{font-size:32px;flex-shrink:0}
+.mobile-action-btn .mab-title{font-size:16px;font-weight:700;margin-bottom:3px}
+.mobile-action-btn .mab-desc{font-size:12px;color:var(--text2)}
+.mobile-action-btn .mab-arrow{margin-left:auto;font-size:20px;color:var(--text3)}
+/* MOBILE FULL SCREEN MODAL */
+.mobile-sheet{
+  position:fixed;inset:0;background:var(--bg);z-index:300;
+  display:none;flex-direction:column;overflow-y:auto;
+}
+.mobile-sheet.open{display:flex}
+.mobile-sheet-header{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:14px 16px;display:flex;align-items:center;gap:12px;
+  position:sticky;top:0;z-index:10;flex-shrink:0;
+}
+.mobile-sheet-header h2{font-size:16px;font-weight:700;flex:1}
+.mobile-sheet-back{background:none;border:none;color:var(--accent);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;padding:0}
+.mobile-sheet-content{padding:16px;flex:1}
+/* MOBILE ASSIGNMENT CARD */
+.mobile-assign-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:16px;margin-bottom:12px;
+}
+.mobile-assign-card.done{border-color:var(--green);background:var(--green)08}
+.mobile-assign-num{font-size:32px;font-weight:700;font-family:"Courier New",monospace}
+.mobile-assign-zone{font-size:13px;font-weight:600;margin-bottom:12px}
+.mobile-assign-actions{display:flex;gap:8px;flex-wrap:wrap}
+/* MOBILE BOTTOM NAV */
+.mobile-bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--surface);border-top:1px solid var(--border);
+  display:none;z-index:200;
+}
+@media(max-width:640px){.mobile-bottom-nav{display:flex}}
+.mobile-nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:10px 6px;cursor:pointer;border:none;background:none;
+  color:var(--text2);font-family:inherit;gap:3px;transition:color .15s;
+}
+.mobile-nav-btn.active{color:var(--accent)}
+.mobile-nav-btn .mn-icon{font-size:22px}
+.mobile-nav-btn .mn-label{font-size:10px;font-weight:600}
 </style>
 </head>
 <body>
@@ -349,7 +412,29 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
       <!-- CLEANING -->
       <div id="panel-cleaning" class="panel">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+        <!-- MOBILE VIEW: big buttons -->
+        <div class="mobile-only" style="flex-direction:column;padding:8px 0">
+          <div style="font-size:15px;font-weight:700;margin-bottom:16px">Good day! 👋</div>
+          <button class="mobile-action-btn" onclick="openMobileAssignments()">
+            <span class="mab-icon">🧹</span>
+            <div><div class="mab-title">My Assignments</div><div class="mab-desc" id="mobileAssignSummary">Loading…</div></div>
+            <span class="mab-arrow">›</span>
+          </button>
+          <button class="mobile-action-btn" onclick="openMobileReport()">
+            <span class="mab-icon">⚠️</span>
+            <div><div class="mab-title">Report Problem</div><div class="mab-desc">Door open, maintenance, missing item…</div></div>
+            <span class="mab-arrow">›</span>
+          </button>
+          <button class="mobile-action-btn" onclick="openMobileReport('done')">
+            <span class="mab-icon">✅</span>
+            <div><div class="mab-title">Cleaning Done</div><div class="mab-desc">Mark a bungalow as cleaned</div></div>
+            <span class="mab-arrow">›</span>
+          </button>
+        </div>
+
+        <!-- DESKTOP VIEW: full layout -->
+        <div class="desktop-only" style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
           <div>
             <div class="tickets-header">
               <h3>My Assignments Today</h3>
@@ -392,7 +477,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
             <div class="form-group"><label>Additional Notes</label><input type="text" id="rNotes" placeholder="Optional…"></div>
             <button class="btn btn-primary btn-block" onclick="submitReport()">Send Report 📤</button>
           </div>
-        </div>
+        </div><!-- end desktop-only -->
       </div>
 
       <!-- MAINTENANCE -->
@@ -674,6 +759,79 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <!-- TOASTS -->
 <div class="toast-container" id="toastContainer"></div>
 
+<!-- MOBILE: Assignments Sheet -->
+<div class="mobile-sheet" id="mobileAssignSheet">
+  <div class="mobile-sheet-header">
+    <button class="mobile-sheet-back" onclick="closeMobileSheet('mobileAssignSheet')">← Back</button>
+    <h2>My Assignments</h2>
+    <span id="mobileAssignDate" style="font-size:11px;color:var(--text2)"></span>
+  </div>
+  <div class="mobile-sheet-content" id="mobileAssignContent"></div>
+</div>
+
+<!-- MOBILE: Report Problem Sheet -->
+<div class="mobile-sheet" id="mobileReportSheet">
+  <div class="mobile-sheet-header">
+    <button class="mobile-sheet-back" onclick="closeMobileSheet('mobileReportSheet')">← Back</button>
+    <h2>Report Problem</h2>
+  </div>
+  <div class="mobile-sheet-content">
+    <div class="form-group">
+      <label>Bungalow Number</label>
+      <input type="number" id="mRBungalow" placeholder="e.g. 148" style="font-size:18px;padding:14px">
+    </div>
+    <div class="form-group">
+      <label>Zone</label>
+      <select id="mRZone" style="font-size:16px;padding:12px">
+        <option value="Blue">🔵 Blue</option>
+        <option value="Grey">⚫ Grey</option>
+        <option value="Yellow">🟡 Yellow</option>
+        <option value="Brown">🟫 Brown</option>
+        <option value="Orange">🟠 Orange</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Issue Type</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">
+        <div class="mobile-issue-btn" onclick="toggleMobileIssue(this,'open')" data-type="open" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer">
+          <div style="font-size:24px">🔓</div><div style="font-size:12px;font-weight:600;margin-top:4px">Door Open</div>
+        </div>
+        <div class="mobile-issue-btn" onclick="toggleMobileIssue(this,'karcher')" data-type="karcher" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer">
+          <div style="font-size:24px">💧</div><div style="font-size:12px;font-weight:600;margin-top:4px">Karcher</div>
+        </div>
+        <div class="mobile-issue-btn" onclick="toggleMobileIssue(this,'maintenance')" data-type="maintenance" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer">
+          <div style="font-size:24px">🔧</div><div style="font-size:12px;font-weight:600;margin-top:4px">Maintenance</div>
+        </div>
+        <div class="mobile-issue-btn" onclick="toggleMobileIssue(this,'inventory')" data-type="inventory" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer">
+          <div style="font-size:24px">📦</div><div style="font-size:12px;font-weight:600;margin-top:4px">Missing Item</div>
+        </div>
+        <div class="mobile-issue-btn" onclick="toggleMobileIssue(this,'depot')" data-type="depot" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer">
+          <div style="font-size:24px">📥</div><div style="font-size:12px;font-weight:600;margin-top:4px">Depot</div>
+        </div>
+        <div class="mobile-issue-btn" onclick="toggleMobileIssue(this,'done')" data-type="done" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer">
+          <div style="font-size:24px">✅</div><div style="font-size:12px;font-weight:600;margin-top:4px">Cleaning Done</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" id="mRMaintBox" style="display:none">
+      <label>Maintenance Detail</label>
+      <input type="text" id="mRMaintNote" placeholder="e.g. AC not working">
+    </div>
+    <div class="form-group" id="mRInvBox" style="display:none">
+      <label>Missing Item Detail</label>
+      <input type="text" id="mRInvNote" placeholder="e.g. 2 knives">
+    </div>
+    <div class="form-group">
+      <label>Notes (optional)</label>
+      <input type="text" id="mRNotes" placeholder="Additional notes…">
+    </div>
+    <button class="btn btn-primary btn-block" style="padding:16px;font-size:16px;margin-top:8px" onclick="submitMobileReport()">Send Report 📤</button>
+  </div>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="mobile-bottom-nav" id="mobileBottomNav"></div>
+
 <script>
 // ══ FIREBASE CONFIG ══════════════════════════════════════════════════════════
 const firebaseConfig = {
@@ -884,6 +1042,7 @@ function buildSidebar() {
       <span class="icon">${icon}</span> ${label}
       ${id==='dashboard'&&openCount>0?`<span class="badge-count">${openCount}</span>`:''}
     </div>`).join('');
+  buildMobileBottomNav();
   // Re-mark active
   const active = document.querySelector('.panel.active');
   if (active) {
@@ -910,6 +1069,7 @@ function navigateTo(panel) {
 function refreshCurrentPanel() { if (_currentPanel) renderPanelContent(_currentPanel); }
 
 function renderPanelContent(p) {
+  buildMobileBottomNav();
   if(p==='dashboard')   renderDashboard();
   if(p==='assignments') renderAssignmentsPanel();
   if(p==='cleaning')    renderCleaning();
@@ -1209,6 +1369,7 @@ function renderCleaning() {
   document.getElementById('cleaningDate').textContent = new Date().toDateString();
   const allAssign = getAssignments();
   const myAssign  = currentRole==='cleaning' ? allAssign.filter(a=>a.assignee===currentUser.name) : allAssign;
+  updateMobileAssignSummary();
   document.getElementById('myAssignments').innerHTML = myAssign.length ? myAssign.map(a=>`
     <div class="ticket ${a.status==='done'?'priority-low':'priority-normal'}">
       <span style="font-size:20px">${a.status==='done'?'✅':a.status==='inprogress'?'🔄':'🧹'}</span>
