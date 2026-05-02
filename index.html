@@ -724,6 +724,7 @@ const LOCAL_USERS = [
 // ══ APP STATE ════════════════════════════════════════════════════════════════
 let currentUser = null, currentRole = null;
 let _modalCb = null;
+let localUsers = [...LOCAL_USERS];
 let fbTickets = {}, fbAssignments = {}, fbNotifications = {}, fbStock = {};
 let selectedBungalows = [];
 
@@ -1973,8 +1974,6 @@ function resolveAll(bungalow, zone) {
 }
 
 // ══ ADMIN ════════════════════════════════════════════════════════════════════
-let localUsers = [...LOCAL_USERS];
-
 function forceInitStock() {
   const msg = document.getElementById('adminStockMsg');
   if (msg) {
