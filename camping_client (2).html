@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Lifestyle Holidays · Castell Montgri</title>
+<style>
+:root {
+  --bg:#0F172A;--surface:#1E293B;--surface2:#273548;--border:#334155;
+  --text:#F1F5F9;--text2:#94A3B8;--text3:#64748B;
+  --accent:#38BDF8;--green:#10B981;--red:#EF4444;--amber:#F59E0B;
+  --orange:#F97316;--purple:#A78BFA;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;max-width:480px;margin:0 auto}
+.screen{min-height:100vh;display:flex;flex-direction:column;padding:0}
+.hidden{display:none!important}
+
+/* ── LOGIN ── */
+#loginScreen{align-items:center;justify-content:center;padding:24px}
+.client-logo{text-align:center;margin-bottom:32px}
+.client-logo .camp-icon{font-size:48px;margin-bottom:12px}
+.client-logo h1{font-size:24px;font-weight:700;color:var(--accent)}
+.client-logo p{font-size:13px;color:var(--text2);margin-top:4px}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;width:100%}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.form-group input,.form-group select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:10px;font-family:inherit;font-size:15px;outline:none;transition:border-color .2s}
+.form-group input:focus{border-color:var(--accent)}
+.btn{padding:12px 20px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.btn-primary{background:var(--accent);color:#0F172A}
+.btn-primary:hover{background:#7DD3FC}
+.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-success{background:var(--green);color:white}
+.btn-danger{background:var(--red);color:white}
+.btn-amber{background:var(--amber);color:#0F172A}
+.error-msg{background:#EF444422;border:1px solid #EF444444;color:#FCA5A5;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;display:none}
+
+/* ── HEADER ── */
+.app-header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.app-header .bungalow-badge{background:var(--accent)22;border:1px solid var(--accent)44;color:var(--accent);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;font-family:'Courier New',monospace}
+.app-header h2{font-size:15px;font-weight:700;flex:1}
+.header-logout{background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;padding:4px}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--surface);border-top:1px solid var(--border);display:flex;z-index:100}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 6px;cursor:pointer;transition:all .15s;gap:3px;border:none;background:none;color:var(--text2);font-family:inherit}
+.nav-btn:hover{color:var(--text)}
+.nav-btn.active{color:var(--accent)}
+.nav-btn .nav-icon{font-size:20px}
+.nav-btn .nav-label{font-size:10px;font-weight:600}
+
+/* ── CONTENT ── */
+.page-content{padding:20px 16px 90px;flex:1}
+
+/* ── PAGES ── */
+.page{display:none}
+.page.active{display:block}
+
+/* ── WELCOME PAGE ── */
+.welcome-card{background:linear-gradient(135deg,#1e3a5f,#273548);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;text-align:center}
+.welcome-card .bung-num{font-size:48px;font-weight:700;font-family:'Courier New',monospace;color:var(--accent)}
+.welcome-card .zone-pill{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-top:8px}
+.welcome-card .guest-name{font-size:18px;font-weight:600;margin-top:8px}
+.welcome-card .dates{font-size:12px;color:var(--text2);margin-top:4px}
+.status-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.status-card .sc-icon{font-size:28px;flex-shrink:0}
+.status-card .sc-label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
+.status-card .sc-value{font-size:14px;font-weight:600}
+.service-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.service-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all .2s}
+.service-card:hover{border-color:var(--accent);background:var(--surface2)}
+.service-card .svc-icon{font-size:28px;margin-bottom:8px}
+.service-card .svc-name{font-size:13px;font-weight:600}
+.service-card .svc-desc{font-size:11px;color:var(--text2);margin-top:3px}
+
+/* ── MAP ── */
+.map-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px}
+.map-card svg{display:block;width:100%}
+.map-legend{display:flex;gap:12px;flex-wrap:wrap;padding:10px 14px;background:var(--surface2);font-size:11px}
+.map-legend span{display:flex;align-items:center;gap:4px}
+.legend-dot{width:8px;height:8px;border-radius:2px;display:inline-block}
+.direction-steps{margin-top:12px}
+.step{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.step-num{width:24px;height:24px;border-radius:50%;background:var(--accent)22;color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.step-text{font-size:13px;color:var(--text2);flex:1}
+
+/* ── REPORT ISSUE ── */
+.issue-types{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.issue-type{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .15s}
+.issue-type:hover{border-color:var(--accent)}
+.issue-type.selected{border-color:var(--accent);background:var(--accent)11}
+.issue-type .it-icon{font-size:24px;margin-bottom:6px}
+.issue-type .it-label{font-size:12px;font-weight:600}
+textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:10px;font-family:inherit;font-size:14px;outline:none;resize:vertical;min-height:80px}
+textarea:focus{border-color:var(--accent)}
+
+/* ── CHECKOUT ── */
+.checkout-option{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;cursor:pointer;transition:all .2s}
+.checkout-option:hover{border-color:var(--accent)}
+.checkout-option.selected{border-color:var(--accent);background:var(--accent)11}
+.checkout-option h3{font-size:15px;font-weight:700;margin-bottom:6px}
+.checkout-option p{font-size:13px;color:var(--text2)}
+.checkout-option .price{font-size:20px;font-weight:700;font-family:'Courier New',monospace;color:var(--accent);margin-top:8px}
+.checklist-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);margin-bottom:8px;cursor:pointer;transition:all .15s}
+.checklist-item.checked{border-color:var(--green);background:var(--green)11}
+.checklist-item input[type="checkbox"]{accent-color:var(--green);width:18px;height:18px;flex-shrink:0}
+.checklist-item label{font-size:13px;cursor:pointer;flex:1}
+.deposit-box{background:#F59E0B11;border:1px solid #F59E0B44;border-radius:12px;padding:14px 16px;margin-bottom:16px}
+.deposit-box h4{color:var(--amber);font-size:13px;font-weight:700;margin-bottom:8px}
+.deposit-box p{font-size:12px;color:var(--text2);line-height:1.6}
+.deposit-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)22}
+.deposit-row:last-child{border-bottom:none;padding-top:10px;font-weight:700}
+
+/* ── TIPS ── */
+.tip-staff-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:14px}
+.tip-avatar{width:44px;height:44px;border-radius:50%;background:var(--accent)22;color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
+.tip-name{font-size:15px;font-weight:600}
+.tip-role{font-size:12px;color:var(--text2)}
+.tip-btn{margin-left:auto;background:var(--green)22;border:1px solid var(--green)44;color:var(--green);padding:8px 14px;border-radius:20px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
+.tip-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.tip-amount{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:20px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.tip-amount.selected{background:var(--green)22;border-color:var(--green);color:var(--green)}
+.qr-box{background:white;border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:center;margin-top:12px}
+
+/* ── SUCCESS ── */
+.success-banner{background:var(--green)11;border:1px solid var(--green)44;border-radius:12px;padding:16px;text-align:center;margin-bottom:16px}
+.success-banner .sb-icon{font-size:36px;margin-bottom:8px}
+.success-banner h3{color:var(--green);font-size:16px;font-weight:700}
+.success-banner p{font-size:13px;color:var(--text2);margin-top:4px}
+
+/* ── TOAST ── */
+.toast-container{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:1000;width:90%;max-width:360px}
+.toast{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;display:flex;gap:10px;align-items:center;box-shadow:0 4px 20px #00000055;animation:slideDown .3s ease}
+.toast.success{border-left:3px solid var(--green)}
+.toast.error{border-left:3px solid var(--red)}
+.toast.info{border-left:3px solid var(--accent)}
+@keyframes slideDown{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen" class="screen">
+  <div class="client-logo">
+    <div class="camp-icon">🏕️</div>
+    <h1>Lifestyle Holidays</h1>
+    <p>Castell Montgri · L'Estartit, Costa Brava</p>
+  </div>
+  <div class="login-card">
+    <div id="loginError" class="error-msg">Invalid booking code. Please check with reception.</div>
+    <div class="form-group">
+      <label>Booking Code</label>
+      <input type="text" id="bookingCode" placeholder="e.g. MTG-4821" autocomplete="off" style="text-transform:uppercase;font-family:'Courier New',monospace;font-size:18px;letter-spacing:2px">
+    </div>
+    <div class="form-group">
+      <label>Last Name</label>
+      <input type="text" id="clientLastName" placeholder="e.g. Smith">
+    </div>
+    <button class="btn btn-primary" onclick="clientLogin()">Enter My Holiday Space 🏖️</button>
+    <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--text3)">Your code was given at reception on arrival</div>
+    <div style="text-align:center;margin-top:8px;font-size:11px" id="onlineIndicator">🔄 Connecting…</div>
+    <div style="text-align:center;margin-top:8px;font-size:11px;color:var(--text3);background:var(--surface2);padding:8px;border-radius:8px;border:1px solid var(--border)">
+      🔑 Demo access: code <strong style="color:var(--amber);font-family:'Courier New',monospace">DEMO</strong> · last name <strong style="color:var(--amber);font-family:'Courier New',monospace">ADMIN</strong>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen" class="screen hidden">
+  <div class="app-header">
+    <div>
+      <div class="bungalow-badge" id="headerBungalow">#148</div>
+    </div>
+    <h2 id="headerName">Smith family</h2>
+    <button class="header-logout" onclick="clientLogout()">⇄</button>
+  </div>
+
+  <div class="page-content">
+
+    <!-- HOME PAGE -->
+    <div id="page-home" class="page active">
+      <div class="welcome-card">
+        <div style="font-size:13px;color:var(--text2)">Welcome to your bungalow</div>
+        <div class="bung-num" id="wcBungalow">148</div>
+        <div class="zone-pill" id="wcZone">Blue Zone</div>
+        <div class="guest-name" id="wcName">Smith Family</div>
+        <div class="dates" id="wcDates">Check-in: – · Check-out: –</div>
+      </div>
+
+      <div id="bungalowStatus"></div>
+
+      <div class="service-grid">
+
+        <div class="service-card" onclick="goPage('report')">
+          <div class="svc-icon">🔔</div>
+          <div class="svc-name">Report Issue</div>
+          <div class="svc-desc">Gas, maintenance…</div>
+        </div>
+        <div class="service-card" onclick="goPage('checkout')">
+          <div class="svc-icon">🏠</div>
+          <div class="svc-name">Checkout</div>
+          <div class="svc-desc">Schedule & options</div>
+        </div>
+        <div class="service-card" onclick="goPage('tips')">
+          <div class="svc-icon">💝</div>
+          <div class="svc-name">Leave a Tip</div>
+          <div class="svc-desc">Thank the team</div>
+        </div>
+      </div>
+
+      <!-- Info boxes -->
+      <div style="margin-top:16px">
+        <div class="status-card">
+          <div class="sc-icon">📞</div>
+          <div>
+            <div class="sc-label">Reception</div>
+            <div class="sc-value">Open 8am – 8pm · Come visit us!</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="sc-icon">🚌</div>
+          <div>
+            <div class="sc-label">Free Shuttle to Beach</div>
+            <div class="sc-value">Every 30 min · Until 5:45pm</div>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="sc-icon">🌊</div>
+          <div>
+            <div class="sc-label">Pools</div>
+            <div class="sc-value">Open 10am – 7pm daily</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAP PAGE -->
+    <div id="page-map" class="page">
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:6px">📍 Find Your Bungalow</h3>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:20px">Use Google Maps to navigate to your bungalow.</p>
+      <div id="mapsButtons"></div>
+      <div style="margin-top:20px" id="directionSteps"></div>
+    </div>
+
+        <!-- REPORT ISSUE PAGE -->
+    <div id="page-report" class="page">
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:6px">🔔 Report an Issue</h3>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:18px">Our team will be notified immediately.</p>
+
+      <div id="reportSuccess" class="success-banner hidden">
+        <div class="sb-icon">✅</div>
+        <h3>Report Sent!</h3>
+        <p>Our team has been notified and will assist you shortly.</p>
+      </div>
+
+      <div id="reportForm">
+        <div class="issue-types">
+          <div class="issue-type" onclick="selectIssue(this,'gas')" data-type="gas">
+            <div class="it-icon">🔥</div>
+            <div class="it-label">No Gas</div>
+          </div>
+          <div class="issue-type" onclick="selectIssue(this,'maintenance')" data-type="maintenance">
+            <div class="it-icon">🔧</div>
+            <div class="it-label">Maintenance</div>
+          </div>
+          <div class="issue-type" onclick="selectIssue(this,'cleaning')" data-type="cleaning">
+            <div class="it-icon">🧹</div>
+            <div class="it-label">Cleaning</div>
+          </div>
+          <div class="issue-type" onclick="selectIssue(this,'towels')" data-type="towels">
+            <div class="it-icon">🛁</div>
+            <div class="it-label">Towels/Linen</div>
+          </div>
+          <div class="issue-type" onclick="selectIssue(this,'noise')" data-type="noise">
+            <div class="it-icon">🔊</div>
+            <div class="it-label">Noise</div>
+          </div>
+          <div class="issue-type" onclick="selectIssue(this,'other')" data-type="other">
+            <div class="it-icon">❓</div>
+            <div class="it-label">Other</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Describe your issue</label>
+          <textarea id="issueDesc" placeholder="Please describe the problem…"></textarea>
+        </div>
+
+        <button class="btn btn-primary" onclick="submitIssue()">Send Report 📤</button>
+      </div>
+    </div>
+
+    <!-- CHECKOUT PAGE -->
+    <div id="page-checkout" class="page">
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:6px">🏠 Checkout</h3>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Schedule your departure and choose your cleaning option.</p>
+
+      <div id="checkoutSuccess" class="success-banner hidden">
+        <div class="sb-icon">✅</div>
+        <h3 id="checkoutSuccessTitle">Checkout Confirmed!</h3>
+        <p id="checkoutSuccessMsg">Reception has been notified.</p>
+      </div>
+
+      <div id="checkoutForm">
+        <!-- Deposit info -->
+        <div class="deposit-box">
+          <h4>💰 Deposit Breakdown</h4>
+          <div class="deposit-row">
+            <span>Total deposit paid</span>
+            <span style="color:var(--amber);font-family:'Courier New',monospace">€100.00</span>
+          </div>
+          <div class="deposit-row">
+            <span>🧹 Cleaning fee (if paid)</span>
+            <span style="color:var(--text2);font-family:'Courier New',monospace">€50.00</span>
+          </div>
+          <div class="deposit-row">
+            <span>⚠️ Damage deposit</span>
+            <span style="color:var(--text2);font-family:'Courier New',monospace">€50.00</span>
+          </div>
+          <div class="deposit-row">
+            <span style="color:var(--green)">Refundable (no damage, self clean)</span>
+            <span style="color:var(--green);font-family:'Courier New',monospace">€100.00</span>
+          </div>
+        </div>
+
+        <!-- Departure time -->
+        <div class="form-group">
+          <label>Preferred Departure Time</label>
+          <select id="checkoutTime" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:10px;font-family:inherit;font-size:14px;outline:none">
+            <option value="">Select a time slot…</option>
+            <option value="08:00">08:00 AM</option>
+            <option value="08:30">08:30 AM</option>
+            <option value="09:00">09:00 AM</option>
+            <option value="09:30">09:30 AM</option>
+            <option value="10:00">10:00 AM</option>
+            <option value="10:30">10:30 AM</option>
+            <option value="11:00">11:00 AM</option>
+          </select>
+        </div>
+
+        <!-- Cleaning option -->
+        <div style="margin-bottom:16px">
+          <label style="display:block;font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Cleaning Option</label>
+
+          <div class="checkout-option" id="opt-paid" onclick="selectCheckout('paid')">
+            <h3>💰 Pay for Cleaning</h3>
+            <p>Our team takes care of everything. Quick and easy departure.</p>
+            <div class="price">€50 deducted from deposit</div>
+            <div style="font-size:12px;color:var(--green);margin-top:6px">€50 refunded · No cleaning required</div>
+          </div>
+
+          <div class="checkout-option" id="opt-self" onclick="selectCheckout('self')">
+            <h3>🧹 Self Clean</h3>
+            <p>Clean the bungalow yourself before departure. Full deposit returned if cleaning passes inspection.</p>
+            <div class="price" style="color:var(--green)">€0 · Keep full €100 deposit</div>
+          </div>
+        </div>
+
+        <!-- Self clean checklist (shown when self selected) -->
+        <div id="selfCleanSection" style="display:none">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px">
+            <h4 style="font-size:14px;font-weight:700;margin-bottom:4px">🧹 Self-Clean Checklist</h4>
+            <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Please complete all items before our team inspects.</p>
+
+            <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">🍳 Kitchen</div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Wash all dishes, cutlery, pots & pans</label></div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Clean hob, oven & microwave</label></div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Wipe fridge inside & out, empty it</label></div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Clean sink and taps</label></div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Empty all bins</label></div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 8px">🔥 BBQ</div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Clean BBQ grill thoroughly</label></div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Empty ash & grease tray</label></div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 8px">🛋️ Living Area</div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Sweep & mop all floors</label></div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Wipe tables, chairs & all surfaces</label></div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Remove all personal belongings</label></div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 8px">🛏️ Bedrooms</div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Strip all bed linen</label></div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Fold & stack blankets and pillows</label></div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 8px">🚿 Bathroom</div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Clean toilet, shower & sink</label></div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Wipe mirrors & all surfaces</label></div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 8px">🌿 Outside</div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Clean outside table & chairs</label></div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Remove all rubbish & bags</label></div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>Leave outdoor area tidy</label></div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 8px">📦 Inventory</div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>All cutlery, plates & glasses present</label></div>
+            <div class="checklist-item" onclick="toggleClCheck(this)"><input type="checkbox"><label>No broken or missing items</label></div>
+
+            <div id="checklistProgress" style="margin-top:12px;font-size:12px;color:var(--text2);text-align:center"></div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="submitCheckout()" id="checkoutSubmitBtn" style="opacity:0.5">Confirm Checkout 📤</button>
+        <p style="font-size:11px;color:var(--text3);text-align:center;margin-top:8px">Select a time and cleaning option to confirm</p>
+      </div>
+    </div>
+
+    <!-- TIPS PAGE -->
+    <div id="page-tips" class="page">
+      <h3 style="font-size:16px;font-weight:700;margin-bottom:6px">💝 Leave a Tip</h3>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:18px">Show your appreciation to the team who looked after you.</p>
+
+      <div id="tipSuccess" class="success-banner hidden">
+        <div class="sb-icon">💝</div>
+        <h3>Thank you!</h3>
+        <p>Your tip has been recorded. The team will be notified.</p>
+      </div>
+
+      <div id="tipsList"></div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <button class="nav-btn active" id="nav-home" onclick="goPage('home')">
+      <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+    </button>
+
+    <button class="nav-btn" id="nav-report" onclick="goPage('report')">
+      <span class="nav-icon">🔔</span><span class="nav-label">Report</span>
+    </button>
+    <button class="nav-btn" id="nav-checkout" onclick="goPage('checkout')">
+      <span class="nav-icon">🏠</span><span class="nav-label">Checkout</span>
+    </button>
+    <button class="nav-btn" id="nav-tips" onclick="goPage('tips')">
+      <span class="nav-icon">💝</span><span class="nav-label">Tips</span>
+    </button>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+
+<!-- All scripts at bottom for correct load order -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+// ── FIREBASE ──────────────────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyAmENrZWTJgjNII3d2gLuLY43wZtnnkugM",
+  authDomain: "camping-montgri.firebaseapp.com",
+  projectId: "camping-montgri",
+  storageBucket: "camping-montgri.firebasestorage.app",
+  messagingSenderId: "748547768758",
+  appId: "1:748547768758:web:4d17085aa68500531ac117",
+  databaseURL: "https://camping-montgri-default-rtdb.europe-west1.firebasedatabase.app"
+};
+let db;
+
+// ── ZONE COLORS ───────────────────────────────────────────────────────────────
+const ZONE_COLOR = { Blue:'#3B82F6', Grey:'#9CA3AF', Yellow:'#F59E0B', Brown:'#D4A96A', Orange:'#F97316' };
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let currentBooking = null;
+let selectedIssueType = null;
+let selectedCheckoutOption = null;
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+function clientLogin() {
+  const code = document.getElementById('bookingCode').value.trim().toUpperCase();
+  const lastName = document.getElementById('clientLastName').value.trim().toUpperCase();
+  const err = document.getElementById('loginError');
+
+  if (!code || !lastName) { err.style.display='block'; err.textContent='Please enter your booking code and last name.'; return; }
+
+  // DEMO / ADMIN bypass
+  if (code === 'DEMO' && lastName === 'ADMIN') {
+    err.style.display = 'none';
+    currentBooking = {
+      firstName: 'Demo', lastName: 'Admin',
+      bungalow: 148, zone: 'Blue',
+      checkin: new Date().toISOString().slice(0,10),
+      checkout: new Date(Date.now()+7*86400000).toISOString().slice(0,10),
+      code: 'DEMO', status: 'active', _key: 'demo'
+    };
+    enterApp();
+    return;
+  }
+
+  db.ref('bookings').orderByChild('code').equalTo(code).once('value', snap => {
+    const data = snap.val();
+    if (!data) { err.style.display='block'; err.textContent='Booking code not found. Please check with reception.'; return; }
+
+    const key = Object.keys(data)[0];
+    const booking = data[key];
+
+    if (booking.lastName.toUpperCase() !== lastName) {
+      err.style.display='block'; err.textContent='Last name does not match. Please check with reception.';
+      return;
+    }
+
+    err.style.display = 'none';
+    currentBooking = { ...booking, _key: key };
+    enterApp();
+  });
+}
+
+document.getElementById('clientLastName').addEventListener('keydown', e => { if(e.key==='Enter') clientLogin(); });
+
+function enterApp() {
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appScreen').classList.remove('hidden');
+  // Set header
+  document.getElementById('headerBungalow').textContent = '#' + currentBooking.bungalow;
+  document.getElementById('headerName').textContent = currentBooking.lastName + ' family';
+  // Set welcome card
+  document.getElementById('wcBungalow').textContent = currentBooking.bungalow;
+  const zonePill = document.getElementById('wcZone');
+  zonePill.textContent = currentBooking.zone + ' Zone';
+  zonePill.style.background = (ZONE_COLOR[currentBooking.zone]||'#888') + '33';
+  zonePill.style.color = ZONE_COLOR[currentBooking.zone]||'#888';
+  zonePill.style.border = '1px solid ' + (ZONE_COLOR[currentBooking.zone]||'#888') + '66';
+  document.getElementById('wcName').textContent = currentBooking.firstName + ' ' + currentBooking.lastName;
+  document.getElementById('wcDates').textContent = `Check-in: ${currentBooking.checkin} · Check-out: ${currentBooking.checkout||'–'}`;
+  // Bungalow status
+  renderBungalowStatus();
+  // Map
+  renderClientMap();
+  renderDirections();
+  // Tips
+  renderTips();
+  goPage('home');
+}
+
+function clientLogout() {
+  currentBooking = null;
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('appScreen').classList.add('hidden');
+  document.getElementById('bookingCode').value = '';
+  document.getElementById('clientLastName').value = '';
+}
+
+// ── BUNGALOW STATUS ───────────────────────────────────────────────────────────
+function renderBungalowStatus() {
+  db.ref('assignments').orderByChild('bungalow').equalTo(currentBooking.bungalow).once('value', snap => {
+    const data = snap.val();
+    let status = 'ready', statusText = '✅ Ready for you', statusColor = 'var(--green)';
+    if (data) {
+      const assignments = Object.values(data).filter(a => a.zone === currentBooking.zone);
+      if (assignments.some(a=>a.status==='assigned'||a.status==='inprogress')) {
+        status='cleaning'; statusText='🧹 Being cleaned – ready soon'; statusColor='var(--amber)';
+      }
+    }
+    document.getElementById('bungalowStatus').innerHTML = `
+      <div class="status-card" style="border-color:${statusColor}44">
+        <div class="sc-icon">🏠</div>
+        <div>
+          <div class="sc-label">Bungalow Status</div>
+          <div class="sc-value" style="color:${statusColor}">${statusText}</div>
+        </div>
+      </div>`;
+  });
+}
+
+// ── MAP ──────────────────────────────────────────────────────────────────────
+function renderClientMap() {
+  // Simple Google Maps link to camping
+  const campingLat = 42.0512, campingLng = 3.1793;
+  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${campingLat},${campingLng}&travelmode=walking`;
+  const el = document.getElementById('mapsButtons');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="status-card" style="margin-bottom:12px">
+      <div class="sc-icon">🏕️</div>
+      <div>
+        <div class="sc-label">Your Bungalow</div>
+        <div class="sc-value" style="color:${ZONE_COLOR[currentBooking.zone]||'#888'}">#${currentBooking.bungalow} · ${currentBooking.zone} Zone</div>
+      </div>
+    </div>
+    <a href="${mapsUrl}" target="_blank" style="text-decoration:none">
+      <button class="btn btn-primary" style="margin-bottom:12px">
+        🗺️ Open in Google Maps
+      </button>
+    </a>
+    <a href="https://maps.apple.com/?daddr=${campingLat},${campingLng}&dirflg=w" target="_blank" style="text-decoration:none">
+      <button class="btn btn-ghost" style="margin-bottom:12px">
+        🍎 Open in Apple Maps
+      </button>
+    </a>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:8px;font-size:13px;color:var(--text2)">
+      📍 <strong style="color:var(--text)">Camping Castell Montgri</strong><br>
+      Carretera de Torroella a l'Estartit, Km 4.7<br>
+      17258 L'Estartit, Girona, Spain
+    </div>`;
+}
+
+function renderDirections() {
+  if (!currentBooking) return;
+  const zone = currentBooking.zone;
+  const dirs = {
+    Blue:   ['Start at Reception (marked at entrance)','Head left along the main path uphill','Blue Zone is on the left side going up','Find your bungalow number on the signs'],
+    Grey:   ['Start at Reception','Head right along the main path','Grey Zone is mid-right of the camping','Follow the numbered signs'],
+    Yellow: ['Start at Reception','Turn right towards the lower area','Yellow Zone is at the bottom left','Follow the numbered path signs'],
+    Orange: ['Start at Reception','Head straight into the central area','Orange Zone is in the middle of camping','Follow the numbered signs'],
+    Brown:  ['Start at Reception','Head left towards the lower section','Brown Zone is on the lower left side','Follow the path to your number'],
+  };
+  const steps = dirs[zone] || dirs['Blue'];
+  const el = document.getElementById('directionSteps');
+  if (!el) return;
+  el.innerHTML = `<h4 style="font-size:14px;font-weight:700;margin-bottom:10px">🚶 Walking Directions</h4>` +
+    steps.map((s,i)=>`
+    <div class="step">
+      <div class="step-num">${i+1}</div>
+      <div class="step-text">${s}</div>
+    </div>`).join('');
+}
+
+// ── REPORT ISSUE ──────────────────────────────────────────────────────────────
+function selectIssue(el, type) {
+  document.querySelectorAll('.issue-type').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedIssueType = type;
+}
+
+function submitIssue() {
+  if (!selectedIssueType) { showToast('error','Select an issue type'); return; }
+  const desc = document.getElementById('issueDesc').value || selectedIssueType;
+  const isOnline = navigator.onLine;
+  const ticketData = {
+    type: selectedIssueType === 'gas' ? 'complaints' : selectedIssueType === 'maintenance' ? 'maintenance' : 'complaints',
+    bungalow: currentBooking.bungalow,
+    zone: currentBooking.zone,
+    desc: `[CLIENT] ${selectedIssueType.toUpperCase()}: ${desc}`,
+    reporter: currentBooking.firstName + ' ' + currentBooking.lastName,
+    status: 'open',
+    priority: selectedIssueType === 'gas' || selectedIssueType === 'maintenance' ? 'urgent' : 'normal',
+    time: new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}),
+    ts: Date.now()
+  };
+  db.ref('tickets').push(ticketData);
+  db.ref('notifications').push({
+    title: `🔔 Client Request – #${currentBooking.bungalow} ${currentBooking.zone}`,
+    text: `${selectedIssueType.toUpperCase()}: ${desc}`,
+    type: selectedIssueType==='gas'||selectedIssueType==='maintenance' ? 'error' : 'info',
+    ts: Date.now(), read: false
+  });
+  document.getElementById('reportForm').classList.add('hidden');
+  document.getElementById('reportSuccess').classList.remove('hidden');
+  document.getElementById('reportSuccess').innerHTML = `
+    <div class="sb-icon">${isOnline ? '✅' : '📥'}</div>
+    <h3 style="color:${isOnline ? 'var(--green)' : 'var(--amber)'}">${isOnline ? 'Report Sent!' : 'Report Saved!'}</h3>
+    <p>${isOnline ? 'Our team has been notified and will assist you shortly.' : 'No internet connection – your report is saved and will be sent automatically when you reconnect.'}</p>`;
+  showToast(isOnline ? 'success' : 'info', isOnline ? 'Report sent!' : '📥 Saved – will send when online');
+}
+
+// ── CHECKOUT ──────────────────────────────────────────────────────────────────
+function selectCheckout(opt) {
+  selectedCheckoutOption = opt;
+  document.getElementById('opt-paid').classList.toggle('selected', opt==='paid');
+  document.getElementById('opt-self').classList.toggle('selected', opt==='self');
+  document.getElementById('selfCleanSection').style.display = opt==='self' ? 'block' : 'none';
+  checkCheckoutReady();
+}
+
+function toggleClCheck(el) {
+  const cb = el.querySelector('input[type="checkbox"]');
+  cb.checked = !cb.checked;
+  el.classList.toggle('checked', cb.checked);
+  const total = document.querySelectorAll('#page-checkout .checklist-item').length;
+  const done  = document.querySelectorAll('#page-checkout .checklist-item.checked').length;
+  document.getElementById('checklistProgress').textContent = `${done}/${total} items completed`;
+  checkCheckoutReady();
+}
+
+function checkCheckoutReady() {
+  const time = document.getElementById('checkoutTime').value;
+  const btn  = document.getElementById('checkoutSubmitBtn');
+  if (!time || !selectedCheckoutOption) { btn.style.opacity='0.5'; return; }
+  if (selectedCheckoutOption==='self') {
+    const total = document.querySelectorAll('#page-checkout .checklist-item').length;
+    const done  = document.querySelectorAll('#page-checkout .checklist-item.checked').length;
+    btn.style.opacity = done===total ? '1' : '0.5';
+  } else {
+    btn.style.opacity = '1';
+  }
+}
+
+document.getElementById('checkoutTime').addEventListener('change', checkCheckoutReady);
+
+function submitCheckout() {
+  const time = document.getElementById('checkoutTime').value;
+  if (!time || !selectedCheckoutOption) { showToast('error','Please complete all fields'); return; }
+  if (selectedCheckoutOption==='self') {
+    const total = document.querySelectorAll('#page-checkout .checklist-item').length;
+    const done  = document.querySelectorAll('#page-checkout .checklist-item.checked').length;
+    if (done < total) { showToast('error','Please complete all cleaning tasks first'); return; }
+  }
+
+  const checkoutData = {
+    bungalow: currentBooking.bungalow,
+    zone: currentBooking.zone,
+    guestName: currentBooking.firstName + ' ' + currentBooking.lastName,
+    time, option: selectedCheckoutOption,
+    depositNote: selectedCheckoutOption==='paid' ? '€50 cleaning deducted · €50 refunded if no damage' : '€100 refunded if inspection passed',
+    status: 'scheduled', ts: Date.now()
+  };
+
+  const _isOnline = navigator.onLine;
+  db.ref('checkouts').push(checkoutData);
+  db.ref('notifications').push({
+    title: `🏠 Checkout Scheduled – #${currentBooking.bungalow} ${currentBooking.zone}`,
+    text: `${currentBooking.lastName} · ${time} · ${selectedCheckoutOption==='paid'?'PAID CLEAN':'SELF CLEAN'}`,
+    type: 'info', ts: Date.now(), read: false
+  });
+  if (!_isOnline) showToast('info', '📥 Saved – will sync when back online');
+
+  document.getElementById('checkoutForm').classList.add('hidden');
+  document.getElementById('checkoutSuccess').classList.remove('hidden');
+  document.getElementById('checkoutSuccessTitle').textContent = `Checkout at ${time} Confirmed!`;
+  document.getElementById('checkoutSuccessMsg').textContent =
+    selectedCheckoutOption==='paid'
+      ? '€50 cleaning fee deducted · €50 returned if no damage. Reception notified.'
+      : 'Self-clean selected. Staff will inspect before returning your full €100 deposit.';
+  showToast('success','Checkout confirmed!');
+}
+
+// ── TIPS ──────────────────────────────────────────────────────────────────────
+function renderTips() {
+  // Get staff who cleaned this bungalow
+  db.ref('tickets').orderByChild('bungalow').equalTo(currentBooking.bungalow).once('value', snap => {
+    const data = snap.val()||{};
+    const cleaners = [...new Set(Object.values(data).filter(t=>t.type==='cleaning'&&t.reporter).map(t=>t.reporter))];
+    if (!cleaners.length) cleaners.push('Cleaning Team');
+
+    document.getElementById('tipsList').innerHTML = cleaners.map(name => `
+      <div class="tip-staff-card" id="tip-${name.replace(/\s/g,'_')}">
+        <div class="tip-avatar">${name[0]}</div>
+        <div>
+          <div class="tip-name">${name}</div>
+          <div class="tip-role">Cleaning Staff</div>
+          <div class="tip-options" id="tipopts-${name.replace(/\s/g,'_')}">
+            <button class="tip-amount" onclick="selectTipAmount('${name}',1,this)">€1</button>
+            <button class="tip-amount" onclick="selectTipAmount('${name}',2,this)">€2</button>
+            <button class="tip-amount" onclick="selectTipAmount('${name}',5,this)">€5</button>
+            <button class="tip-amount" onclick="selectTipAmount('${name}',10,this)">€10</button>
+          </div>
+        </div>
+        <button class="tip-btn" onclick="sendTip('${name}')">Send Tip 💝</button>
+      </div>`).join('');
+  });
+}
+
+let selectedTips = {};
+function selectTipAmount(name, amount, el) {
+  const key = name.replace(/\s/g,'_');
+  document.querySelectorAll(`#tipopts-${key} .tip-amount`).forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTips[name] = amount;
+}
+
+function sendTip(name) {
+  const amount = selectedTips[name];
+  if (!amount) { showToast('error','Select a tip amount first'); return; }
+
+  const _tipOnline = navigator.onLine;
+  db.ref('tips').push({
+    staffName: name,
+    amount,
+    bungalow: currentBooking.bungalow,
+    zone: currentBooking.zone,
+    guestName: currentBooking.firstName + ' ' + currentBooking.lastName,
+    ts: Date.now()
+  });
+  db.ref('notifications').push({
+    title: `💝 Tip for ${name}`,
+    text: `€${amount} from bungalow #${currentBooking.bungalow} – ${currentBooking.lastName}`,
+    type: 'success', ts: Date.now(), read: false
+  });
+  if (!_tipOnline) showToast('info', '📥 Saved – will sync when back online');
+
+  const card = document.getElementById(`tip-${name.replace(/\s/g,'_')}`);
+  if (card) card.innerHTML = `
+    <div class="tip-avatar">💝</div>
+    <div>
+      <div class="tip-name">${name}</div>
+      <div class="tip-role" style="color:var(--green)">✅ €${amount} tip sent! Thank you!</div>
+    </div>`;
+  showToast('success',`€${amount} tip sent to ${name}!`);
+  document.getElementById('tipSuccess').classList.remove('hidden');
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function goPage(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  const navEl = document.getElementById('nav-'+page);
+  if (navEl) navEl.classList.add('active');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function showToast(type, msg) {
+  const icons = {success:'✅',error:'🔴',info:'ℹ️'};
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(()=>el.remove(), 3500);
+}
+
+
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+firebase.initializeApp(firebaseConfig);
+db = firebase.database();
+// URL param auto-login
+var _urlParams = new URLSearchParams(window.location.search);
+var _codeParam = _urlParams.get('code');
+if (_codeParam) { document.getElementById('bookingCode').value = _codeParam.toUpperCase(); }
+</script>
+</body>
+</html>
