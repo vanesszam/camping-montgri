@@ -2245,5 +2245,55 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(() => clearInterval(checkFirebase), 5000);
 });
 </script>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAmENrZWTJgjNII3d2gLuLY43wZtnnkugM",
+    authDomain: "camping-montgri.firebaseapp.com",
+    databaseURL: "https://camping-montgri-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "camping-montgri",
+    storageBucket: "camping-montgri.firebasestorage.app",
+    messagingSenderId: "748547768758",
+    appId: "1:748547768758:web:cdfbc57dd597f5281ac117"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // ✔️ DONE
+  window.sendCleaningDone = function(bungalow) {
+    const entry = push(ref(db, "cleaning"));
+    set(entry, {
+      bungalow: bungalow,
+      status: "done",
+      timestamp: Date.now()
+    });
+  }
+
+  // ✔️ PROBLEME
+  window.sendProblem = function(bungalow, issue) {
+    if (!issue) return;
+    const entry = push(ref(db, "maintenance"));
+    set(entry, {
+      bungalow: bungalow,
+      issue: issue,
+      timestamp: Date.now()
+    });
+  }
+
+  // ✔️ INVENTAIRE
+  window.sendInventory = function(bungalow, missing) {
+    if (!missing) return;
+    const entry = push(ref(db, "inventory"));
+    set(entry, {
+      bungalow: bungalow,
+      missing: missing,
+      timestamp: Date.now()
+    });
+  }
+</script>
+
 </body>
 </html>
