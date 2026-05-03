@@ -990,7 +990,16 @@ function showRoleScreen() {
   show('roleScreen');
   document.getElementById('roleGreeting').textContent = `Welcome back, ${currentUser.name}! 👋`;
   const grid = document.getElementById('roleGrid');
-  const visibleRoles = currentUser.roles.filter(r => r !== 'admin' && ROLES[r]);
+
+  // If user is manager, only show Manager + Admin
+  const isManager = currentUser.roles.includes('manager');
+  let visibleRoles;
+  if (isManager) {
+    visibleRoles = ['manager'].filter(r => currentUser.roles.includes(r) && ROLES[r]);
+  } else {
+    visibleRoles = currentUser.roles.filter(r => r !== 'admin' && ROLES[r]);
+  }
+
   grid.innerHTML = visibleRoles.map(r => `
     <div class="role-card" onclick="selectRole('${r}')">
       <div class="role-icon">${ROLES[r].icon}</div>
@@ -1280,9 +1289,14 @@ function renderDashSchedule() {
 // ══ ASSIGNMENTS PANEL ════════════════════════════════════════════════════════
 function renderAssignmentsPanel() {
   document.getElementById('assignDate').textContent = new Date().toDateString();
-  // Populate staff dropdown (cleaning only)
-  const cleaners = LOCAL_USERS.filter(u=>u.roles.includes('cleaning'));
-  document.getElementById('assignStaff').innerHTML = cleaners.map(u=>`<option value="${u.name}">${u.name}</option>`).join('');
+  // Populate staff dropdown - all users with cleaning role
+  const cleaners = localUsers.filter(u => u.roles.includes('cleaning'));
+  const staffEl = document.getElementById('assignStaff');
+  if (staffEl) {
+    staffEl.innerHTML = cleaners.length
+      ? cleaners.map(u=>`<option value="${u.name}">${u.name}</option>`).join('')
+      : '<option value="">No cleaning staff found</option>';
+  }
   renderBungalowPicker();
   renderAssignmentsList();
 }
