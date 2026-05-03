@@ -1290,12 +1290,16 @@ function renderDashSchedule() {
 function renderAssignmentsPanel() {
   document.getElementById('assignDate').textContent = new Date().toDateString();
   // Populate staff dropdown - all users with cleaning role
-  const cleaners = localUsers.filter(u => u.roles.includes('cleaning'));
+  // Use LOCAL_USERS as base + any added via admin
+  const allUsers = [...LOCAL_USERS, ...localUsers.filter(u => !LOCAL_USERS.find(lu => lu.id === u.id))];
+  const cleaners = allUsers.filter(u => u.roles.includes('cleaning'));
   const staffEl = document.getElementById('assignStaff');
   if (staffEl) {
-    staffEl.innerHTML = cleaners.length
-      ? cleaners.map(u=>`<option value="${u.name}">${u.name}</option>`).join('')
-      : '<option value="">No cleaning staff found</option>';
+    if (cleaners.length) {
+      staffEl.innerHTML = cleaners.map(u=>`<option value="${u.name}">${u.name}</option>`).join('');
+    } else {
+      staffEl.innerHTML = '<option value="">No cleaning staff found</option>';
+    }
   }
   renderBungalowPicker();
   renderAssignmentsList();
