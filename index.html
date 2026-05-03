@@ -748,8 +748,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 </div>
 
 <!-- MODAL -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modalBox">
     <h2 id="modalTitle"></h2>
     <div id="modalBody"></div>
     <div class="modal-actions" id="modalActions"></div>
@@ -1018,8 +1018,8 @@ function backToRoles() { show('roleScreen'); showRoleScreen(); }
 
 // ══ SIDEBAR ══════════════════════════════════════════════════════════════════
 const navConfig = {
-  manager:     [['dashboard','📊','Dashboard'],['assignments','📋','Assignments'],['cleaning','🧹','Cleaning'],['maintenance','🔧','Maintenance'],['inventory','📦','Inventory'],['reception','📋','Reception'],['complaints','⚠️','Complaints'],['map','🗺️','Map View']],
-  submanager:  [['dashboard','📊','Dashboard'],['assignments','📋','Assignments'],['cleaning','🧹','Cleaning'],['maintenance','🔧','Maintenance'],['inventory','📦','Inventory'],['reception','📋','Reception'],['map','🗺️','Map View']],
+  manager:     [['dashboard','📊','Dashboard'],['assignments','📋','Assignments'],['maintenance','🔧','Maintenance'],['inventory','📦','Inventory'],['reception','📋','Reception'],['complaints','⚠️','Complaints'],['map','🗺️','Map View']],
+  submanager:  [['dashboard','📊','Dashboard'],['assignments','📋','Assignments'],['maintenance','🔧','Maintenance'],['inventory','📦','Inventory'],['reception','📋','Reception'],['map','🗺️','Map View']],
   cleaning:    [['cleaning','🧹','My Cleaning']],
   maintenance: [['maintenance','🔧','Tickets']],
   inventory:   [['inventory','📦','Inventory']],
@@ -1070,6 +1070,11 @@ function navigateTo(panel) {
 function refreshCurrentPanel() { if (_currentPanel) renderPanelContent(_currentPanel); }
 
 function renderPanelContent(p) {
+  // Close any open mobile sheets when navigating
+  document.querySelectorAll('.mobile-sheet.open').forEach(s => s.classList.remove('open'));
+  document.body.style.overflow = '';
+  // Close any open modal
+  document.getElementById('modalOverlay').classList.remove('open');
   buildMobileBottomNav();
   if(p==='dashboard')   renderDashboard();
   if(p==='assignments') renderAssignmentsPanel();
@@ -2237,8 +2242,16 @@ function openModal(title, body, onSave) {
   document.getElementById('modalOverlay').classList.add('open');
 }
 function closeModal() { 
-  document.getElementById('modalOverlay').classList.remove('open'); 
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.getElementById('modalBody').innerHTML = '';
   _modalCb = null; 
+}
+
+function handleOverlayClick(e) {
+  // Close only if clicking the dark overlay, not the modal itself
+  if (e.target === document.getElementById('modalOverlay')) {
+    closeModal();
+  }
 }
 
 // ══ NOTIFICATIONS ════════════════════════════════════════════════════════════
