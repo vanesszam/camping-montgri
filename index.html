@@ -3,13 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0F172A">
+<title>Camping Montgri Lifestyle</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- ══ PWA ══════════════════════════════════════════════════════════════════ -->
+<link rel="manifest" href="/camping-montgri/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Montgri Staff">
-<link rel="manifest" href="manifest.json">
-<title>Camping Montgri Lifestyle</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<meta name="theme-color" content="#0F172A">
+<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/vanesszam/camping-montgri/main/icon-192.png">
+
+<!-- ══ Firebase Messaging (compat) ══════════════════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
 
 <style>
 :root {
@@ -207,43 +213,62 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .fb-loading{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--text2);font-size:13px;gap:10px}
 .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* ══ MOBILE UX IMPROVEMENTS ═════════════════════════════════════════════════ */
 @media(max-width:640px){
-  .sidebar{display:none!important}
-  /* Make main content fill full width on mobile */
-  #appScreen{flex-direction:column!important}
-  .main{width:100%!important;min-width:0!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch}
-  .content{padding:12px 12px 80px!important;width:100%!important}
-  .stats-grid{grid-template-columns:1fr 1fr!important;gap:8px!important}
-  .stat-card{padding:10px 12px!important}
-  .stat-card .num{font-size:22px!important}
-  .btn{min-height:44px!important}
-  .topbar{padding:10px 14px!important}
-  .topbar h1{font-size:15px!important}
-  /* Forms readable on mobile */
-  .form-group input,.form-group select,.form-group textarea{font-size:16px!important;padding:12px!important}
-  /* Tables scrollable */
-  .table-wrap{overflow-x:auto!important}
-  /* Grid layouts → single column on mobile */
-  div[style*="grid-template-columns:1fr 1fr"]{display:block!important}
-  .report-form{margin-top:16px!important}
-  /* Inventory grid */
-  .inventory-grid{grid-template-columns:1fr 1fr!important}
+  .sidebar{display:none}
+  body{padding-bottom:calc(65px + env(safe-area-inset-bottom,0px))!important}
+  .btn,button,[role="button"]{min-height:44px}
+  .main,.content,.notif-panel{-webkit-overflow-scrolling:touch}
+  input,select,textarea{font-size:16px!important}
+  #panel-cleaning > div,
+  #panel-assignments > div:first-of-type{grid-template-columns:1fr!important}
+  #panel-dashboard > div:last-of-type{grid-template-columns:1fr!important}
+  .topbar h1{font-size:15px}
+  #topDate{display:none}
+  .content{padding:12px}
 }
-/* Mobile bottom nav */
-.mobile-bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;
+
+/* ══ BOTTOM NAVIGATION MOBILE ════════════════════════════════════════════════ */
+#mobile-bottom-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;height:65px;
   background:var(--surface);border-top:1px solid var(--border);
-  display:none;z-index:200;padding-bottom:env(safe-area-inset-bottom);
+  z-index:1000;justify-content:space-around;align-items:center;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  box-shadow:0 -4px 20px #00000044;
 }
-@media(max-width:640px){.mobile-bottom-nav{display:flex}}
-.mob-nav-btn{
-  flex:1;display:flex;flex-direction:column;align-items:center;
-  padding:10px 4px;cursor:pointer;border:none;background:none;
-  color:var(--text2);font-family:inherit;gap:2px;
+@media(max-width:640px){#mobile-bottom-nav{display:flex!important}}
+.mob-btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex:1;height:100%;background:none;border:none;
+  color:rgba(255,255,255,0.4);cursor:pointer;gap:2px;
+  transition:color .2s;min-height:44px;padding:8px 0;font-family:inherit;
 }
-.mob-nav-btn.active{color:var(--accent)}
-.mob-nav-btn .mn-icon{font-size:22px}
-.mob-nav-btn .mn-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.mob-btn.active{color:var(--accent)}
+.mob-btn:active{background:rgba(255,255,255,0.05)}
+.mob-icon{font-size:20px;line-height:1}
+.mob-label{font-size:10px;font-weight:500;letter-spacing:0.3px}
+
+/* ══ NOTIFICATION BADGE ══════════════════════════════════════════════════════ */
+.notif-badge-count{
+  position:absolute;top:-5px;right:-5px;
+  background:var(--red);color:white;border-radius:999px;
+  font-size:10px;font-weight:700;min-width:18px;height:18px;
+  display:none;align-items:center;justify-content:center;
+  padding:0 4px;border:2px solid var(--surface);z-index:10;
+}
+.notif-badge-count.visible{display:flex!important}
+
+/* ══ FCM FOREGROUND TOAST ════════════════════════════════════════════════════ */
+.fcm-toast-notif{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);padding:12px 20px 12px 14px;border-radius:12px;
+  font-size:13px;font-weight:500;z-index:9999;max-width:90vw;min-width:260px;
+  box-shadow:0 4px 24px #00000055;display:flex;align-items:flex-start;gap:10px;
+  animation:fcmSlide .3s ease;pointer-events:none;
+}
+@keyframes fcmSlide{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 </style>
 </head>
 <body>
@@ -301,7 +326,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <div class="topbar-actions">
         <span id="topDate" style="font-size:12px;color:var(--text2)"></span>
         <div class="notif-wrapper">
-          <button class="notif-btn" onclick="toggleNotifPanel()">🔔<span class="notif-dot" id="notifDot"></span></button>
+          <button class="notif-btn" onclick="toggleNotifPanel()" style="position:relative">🔔<span class="notif-dot" id="notifDot"></span><span class="notif-badge-count" id="notifBadgeCount"></span></button>
           <div class="notif-panel" id="notifPanel">
             <div class="notif-panel-header">Notifications</div>
             <div id="notifList"></div>
@@ -704,8 +729,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 </div>
 
 <!-- MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
-  <div class="modal" id="modalBox">
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
     <h2 id="modalTitle"></h2>
     <div id="modalBody"></div>
     <div class="modal-actions" id="modalActions"></div>
@@ -714,9 +739,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 <!-- TOASTS -->
 <div class="toast-container" id="toastContainer"></div>
-
-<!-- MOBILE BOTTOM NAV -->
-<div class="mobile-bottom-nav" id="mobileBottomNav"></div>
 
 <script>
 // ══ FIREBASE CONFIG ══════════════════════════════════════════════════════════
@@ -786,16 +808,9 @@ function initFirebaseListeners() {
     fbAssignments = snap.val() || {};
     refreshCurrentPanel();
   });
-  // Notifications — play sound on new urgent ones
-  let _lastNotifCount = 0;
+  // Notifications
   db.ref('notifications').on('value', snap => {
     fbNotifications = snap.val() || {};
-    const unread = Object.values(fbNotifications).filter(n=>!n.read);
-    if (unread.length > _lastNotifCount && _lastNotifCount > 0) {
-      const latest = unread.sort((a,b)=>b.ts-a.ts)[0];
-      playNotifEffect(latest?.type === 'error' ? 'urgent' : 'normal');
-    }
-    _lastNotifCount = unread.length;
     renderNotifList();
     updateNotifDot();
   });
@@ -874,51 +889,15 @@ function doLogin() {
   if (!user) { err.style.display = 'block'; return; }
   err.style.display = 'none';
   currentUser = user;
-  // Remember session
-  localStorage.setItem('cm_user', user.username);
-  localStorage.setItem('cm_role', user.roles[0]);
   showRoleScreen();
 }
 document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
-
-// Auto-login from saved session
-function tryAutoLogin() {
-  const savedUser = localStorage.getItem('cm_user');
-  const savedRole = localStorage.getItem('cm_role');
-  if (!savedUser || !savedRole) return;
-  const user = LOCAL_USERS.find(x => x.username === savedUser);
-  if (!user) { localStorage.removeItem('cm_user'); return; }
-  currentUser = user;
-  // If saved role is manager, go straight to manager panel (skip role screen)
-  if (user.roles.includes('manager') && savedRole === 'manager') {
-    currentRole = 'manager';
-    show('appScreen');
-    buildSidebar();
-    setDateLabel();
-    updateNotifDot();
-    navigateTo('dashboard');
-  } else if (user.roles.includes(savedRole)) {
-    currentRole = savedRole;
-    show('appScreen');
-    buildSidebar();
-    setDateLabel();
-    updateNotifDot();
-    navigateTo(getDefaultPanel(savedRole));
-  }
-}
 
 function showRoleScreen() {
   show('roleScreen');
   document.getElementById('roleGreeting').textContent = `Welcome back, ${currentUser.name}! 👋`;
   const grid = document.getElementById('roleGrid');
-  const isManager = currentUser.roles.includes('manager') || currentUser.roles.includes('submanager');
-  // Manager sees ONLY Manager + Admin — no need to pick between 8 roles
-  let visibleRoles;
-  if (isManager) {
-    visibleRoles = currentUser.roles.filter(r => (r==='manager'||r==='submanager') && ROLES[r]);
-  } else {
-    visibleRoles = currentUser.roles.filter(r => r !== 'admin' && ROLES[r]);
-  }
+  const visibleRoles = currentUser.roles.filter(r => r !== 'admin' && ROLES[r]);
   grid.innerHTML = visibleRoles.map(r => `
     <div class="role-card" onclick="selectRole('${r}')">
       <div class="role-icon">${ROLES[r].icon}</div>
@@ -932,8 +911,6 @@ function showRoleScreen() {
 
 function selectRole(role) {
   currentRole = role;
-  // Save session
-  localStorage.setItem('cm_role', role);
   show('appScreen');
   buildSidebar();
   setDateLabel();
@@ -943,18 +920,12 @@ function selectRole(role) {
 
 const panelDefaults = { manager:'dashboard', submanager:'dashboard', cleaning:'cleaning', maintenance:'maintenance', inventory:'inventory', reception:'reception', complaints:'complaints', admin:'admin' };
 function getDefaultPanel(r) { return panelDefaults[r] || 'dashboard'; }
-function doLogout() { 
-  currentUser = null; 
-  currentRole = null; 
-  localStorage.removeItem('cm_user');
-  localStorage.removeItem('cm_role');
-  show('loginScreen'); 
-}
+function doLogout() { currentUser = null; currentRole = null; show('loginScreen'); }
 function backToRoles() { show('roleScreen'); showRoleScreen(); }
 
 // ══ SIDEBAR ══════════════════════════════════════════════════════════════════
 const navConfig = {
-  manager:     [['dashboard','📊','Dashboard'],['assignments','📋','Assignments'],['maintenance','🔧','Maintenance'],['inventory','📦','Inventory'],['reception','📋','Reception'],['complaints','⚠️','Complaints'],['map','🗺️','Map View']],
+  manager:     [['dashboard','📊','Dashboard'],['assignments','📋','Assignments'],['cleaning','🧹','Cleaning'],['maintenance','🔧','Maintenance'],['inventory','📦','Inventory'],['reception','📋','Reception'],['complaints','⚠️','Complaints'],['map','🗺️','Map View']],
   submanager:  [['dashboard','📊','Dashboard'],['assignments','📋','Assignments'],['cleaning','🧹','Cleaning'],['maintenance','🔧','Maintenance'],['inventory','📦','Inventory'],['reception','📋','Reception'],['map','🗺️','Map View']],
   cleaning:    [['cleaning','🧹','My Cleaning']],
   maintenance: [['maintenance','🔧','Tickets']],
@@ -979,7 +950,6 @@ function buildSidebar() {
       <span class="icon">${icon}</span> ${label}
       ${id==='dashboard'&&openCount>0?`<span class="badge-count">${openCount}</span>`:''}
     </div>`).join('');
-  buildMobileNav();
   // Re-mark active
   const active = document.querySelector('.panel.active');
   if (active) {
@@ -992,10 +962,6 @@ function buildSidebar() {
 let _currentPanel = 'dashboard';
 function navigateTo(panel) {
   _currentPanel = panel;
-  // Close any open modal when navigating
-  document.getElementById('modalOverlay').classList.remove('open');
-  _modalCb = null;
-  buildMobileNav();
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const nEl = document.getElementById('nav-'+panel);
   if (nEl) nEl.classList.add('active');
@@ -1214,6 +1180,9 @@ function renderDashSchedule() {
 // ══ ASSIGNMENTS PANEL ════════════════════════════════════════════════════════
 function renderAssignmentsPanel() {
   document.getElementById('assignDate').textContent = new Date().toDateString();
+  // Populate staff dropdown (cleaning only)
+  const cleaners = LOCAL_USERS.filter(u=>u.roles.includes('cleaning'));
+  document.getElementById('assignStaff').innerHTML = cleaners.map(u=>`<option value="${u.name}">${u.name}</option>`).join('');
   renderBungalowPicker();
   renderAssignmentsList();
 }
@@ -1247,9 +1216,8 @@ function toggleBungalowSelect(key, num, zone) {
 }
 
 function createAssignments() {
-  const staff = document.getElementById('assignStaff').value.trim();
-  if (!staff) { showToast('error','Enter staff name','Type the name of the cleaning person'); return; }
   if (!selectedBungalows.length) { showToast('error','Select bungalows','Click on bungalow numbers to select them'); return; }
+  const staff  = document.getElementById('assignStaff').value;
   const notes  = document.getElementById('assignNotes').value;
   const ts     = Date.now();
   const updates = {};
@@ -2251,6 +2219,251 @@ document.addEventListener('click', e=>{
   // Offline persistence — works without internet, syncs when back online
   firebase.database().goOnline();
   initFirebaseListeners();
+  // Lance FCM après que Firebase soit prêt
+  fcmInit();
 </script>
+
+<!-- ══ BOTTOM NAVIGATION MOBILE ════════════════════════════════════════════ -->
+<nav id="mobile-bottom-nav">
+  <button class="mob-btn" id="mobbtn-dashboard"   onclick="mobileNav('dashboard')">
+    <span class="mob-icon">📊</span><span class="mob-label">Dashboard</span>
+  </button>
+  <button class="mob-btn" id="mobbtn-cleaning"    onclick="mobileNav('cleaning')">
+    <span class="mob-icon">🧹</span><span class="mob-label">Cleaning</span>
+  </button>
+  <button class="mob-btn" id="mobbtn-maintenance" onclick="mobileNav('maintenance')">
+    <span class="mob-icon">🔧</span><span class="mob-label">Maintenance</span>
+  </button>
+  <button class="mob-btn" id="mobbtn-inventory"   onclick="mobileNav('inventory')">
+    <span class="mob-icon">📦</span><span class="mob-label">Inventory</span>
+  </button>
+</nav>
+
+<!-- ══ FCM + MOBILE NAV SCRIPTS ═════════════════════════════════════════════ -->
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// FIREBASE CLOUD MESSAGING — PUSH NOTIFICATIONS
+// ⚠️  Remplace FCM_VAPID_KEY par ta clé :
+//     Firebase Console → Project Settings → Cloud Messaging →
+//     Web push certificates → Generate key pair
+// ══════════════════════════════════════════════════════════════════════════════
+const FCM_VAPID_KEY = "REMPLACE_PAR_TA_VAPID_KEY_FIREBASE";
+
+// Sons par rôle — place ces fichiers .mp3 à la racine du repo
+const FCM_SOUNDS = {
+  cleaning:    new Audio('/camping-montgri/clean.mp3'),
+  maintenance: new Audio('/camping-montgri/maint.mp3'),
+  inventory:   new Audio('/camping-montgri/notif.mp3'),
+  default:     new Audio('/camping-montgri/notif.mp3'),
+};
+
+let _fcmUnread = 0;
+
+// ── 1. Enregistrement Service Worker ────────────────────────────────────────
+async function fcmRegisterSW() {
+  if (!('serviceWorker' in navigator)) return null;
+  try {
+    const reg = await navigator.serviceWorker.register(
+      '/camping-montgri/firebase-messaging-sw.js',
+      { scope: '/camping-montgri/' }
+    );
+    console.log('[FCM] ✅ SW enregistré :', reg.scope);
+    return reg;
+  } catch (e) {
+    console.warn('[FCM] SW non enregistré :', e.message);
+    return null;
+  }
+}
+
+// ── 2. Demande permission + récupération token ───────────────────────────────
+async function fcmRequestPermission() {
+  if (!('Notification' in window)) return;
+  const perm = await Notification.requestPermission();
+  if (perm === 'granted') {
+    await fcmGetToken();
+  } else {
+    console.warn('[FCM] Permission refusée');
+  }
+}
+
+async function fcmGetToken() {
+  try {
+    const messaging = firebase.messaging();
+    const swReg = await navigator.serviceWorker.ready;
+    const token = await messaging.getToken({
+      vapidKey: FCM_VAPID_KEY,
+      serviceWorkerRegistration: swReg
+    });
+    if (token) {
+      console.log('[FCM] 🔑 Token FCM :', token);
+      fcmSaveToken(token);
+    }
+  } catch (e) {
+    console.warn('[FCM] Token non obtenu :', e.message);
+  }
+}
+
+// ── 3. Stockage token dans Firebase avec le rôle ─────────────────────────────
+function fcmSaveToken(token) {
+  if (!currentUser || !currentRole || !db) return;
+  const userId = 'user_' + currentUser.username;
+  // Structure : fcmTokens/{userId} avec name/role/token
+  db.ref('fcmTokens/' + userId).set({
+    name:      currentUser.name,
+    username:  currentUser.username,
+    role:      currentRole,
+    token:     token,
+    updatedAt: Date.now(),
+    platform:  /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
+  });
+  console.log('[FCM] ✅ Token sauvegardé — rôle : ' + currentRole);
+}
+
+// ── 4. Réception notifications AU PREMIER PLAN (app ouverte) ─────────────────
+function fcmListenForeground() {
+  try {
+    const messaging = firebase.messaging();
+    messaging.onMessage((payload) => {
+      console.log('[FCM] 📨 Message premier plan :', payload);
+      const { title, body } = payload.notification || {};
+      const data = payload.data || {};
+      const role = data.role || currentRole || 'default';
+      const priority = data.priority || 'normal';
+
+      // Son selon le rôle
+      fcmPlaySound(role);
+
+      // Vibration mobile
+      if ('vibrate' in navigator) {
+        navigator.vibrate(priority === 'urgent'
+          ? [300, 100, 300, 100, 300]
+          : [200, 100, 200]);
+      }
+
+      // Notification API native (même si app ouverte)
+      if (Notification.permission === 'granted') {
+        const emojis = { cleaning:'🧹', maintenance:'🔧', inventory:'📦', manager:'👑' };
+        new Notification((emojis[role] || '🏕️') + ' ' + (title || 'Camping Montgri'), {
+          body:  body || '',
+          icon:  '/camping-montgri/icon-192.png',
+          badge: '/camping-montgri/icon-192.png',
+          tag:   role
+        });
+      }
+
+      // Badge 🔴 sur la cloche
+      fcmIncrementBadge();
+
+      // Toast visuel dans l'UI
+      fcmShowForegroundToast(title || 'Nouvelle notification', body || '', role, priority);
+    });
+  } catch(e) {
+    console.warn('[FCM] Foreground listener :', e.message);
+  }
+}
+
+// ── 5. Son par rôle ──────────────────────────────────────────────────────────
+function fcmPlaySound(role) {
+  const audio = FCM_SOUNDS[role] || FCM_SOUNDS.default;
+  audio.currentTime = 0;
+  // Les navigateurs bloquent l'audio sans interaction préalable — c'est normal
+  audio.play().catch(() => {});
+}
+
+// ── 6. Badge compteur non-lus ────────────────────────────────────────────────
+function fcmIncrementBadge() {
+  _fcmUnread++;
+  fcmUpdateBadgeUI();
+  // Badge natif Android Chrome
+  if ('setAppBadge' in navigator) navigator.setAppBadge(_fcmUnread).catch(()=>{});
+}
+
+function fcmClearBadge() {
+  _fcmUnread = 0;
+  fcmUpdateBadgeUI();
+  if ('clearAppBadge' in navigator) navigator.clearAppBadge().catch(()=>{});
+}
+
+function fcmUpdateBadgeUI() {
+  const badge = document.getElementById('notifBadgeCount');
+  if (!badge) return;
+  if (_fcmUnread > 0) {
+    badge.textContent = _fcmUnread > 99 ? '99+' : _fcmUnread;
+    badge.classList.add('visible');
+  } else {
+    badge.textContent = '';
+    badge.classList.remove('visible');
+  }
+}
+
+// ── 7. Toast visuel notification au premier plan ─────────────────────────────
+function fcmShowForegroundToast(title, body, role, priority) {
+  document.querySelector('.fcm-toast-notif')?.remove();
+  const colors = {
+    cleaning:'var(--accent)', maintenance:'var(--amber)',
+    inventory:'var(--purple)', manager:'var(--green)', default:'var(--blue)'
+  };
+  const emojis = {
+    cleaning:'🧹', maintenance:'🔧', inventory:'📦',
+    manager:'👑', default:'🏕️'
+  };
+  const toast = document.createElement('div');
+  toast.className = 'fcm-toast-notif';
+  toast.style.borderLeft = '3px solid ' + (colors[role] || colors.default);
+  toast.innerHTML =
+    '<span style="font-size:20px;flex-shrink:0">' + (emojis[role] || emojis.default) + '</span>'
+    + '<div><div style="font-weight:600">' + title + '</div>'
+    + (body ? '<div style="font-size:12px;color:var(--text2);margin-top:2px">' + body + '</div>' : '')
+    + (priority === 'urgent' ? '<div style="font-size:11px;color:var(--red);margin-top:2px;font-weight:700">🚨 URGENT</div>' : '')
+    + '</div>';
+  document.body.appendChild(toast);
+  const delay = priority === 'urgent' ? 6000 : 4000;
+  setTimeout(() => {
+    toast.style.transition = 'opacity .3s';
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 300);
+  }, delay);
+}
+
+// ── 8. Initialisation FCM complète ──────────────────────────────────────────
+async function fcmInit() {
+  console.log('[FCM] 🚀 Initialisation FCM...');
+  const sw = await fcmRegisterSW();
+  if (!sw) { console.warn('[FCM] Pas de SW — push désactivé'); return; }
+  // Demande permission (déclenché après login = interaction utilisateur ✓)
+  await fcmRequestPermission();
+  // Active la réception des messages en premier plan
+  fcmListenForeground();
+  console.log('[FCM] ✅ FCM prêt');
+}
+
+// ══ MOBILE BOTTOM NAV ════════════════════════════════════════════════════════
+// Navigation mobile — synchronisée avec la sidebar desktop
+function mobileNav(panel) {
+  navigateTo(panel);
+}
+
+// Surcharge navigateTo pour synchroniser la bottom nav mobile
+(function() {
+  const _orig = window.navigateTo;
+  window.navigateTo = function(panel) {
+    _orig(panel);
+    // Met à jour l'onglet actif de la bottom nav
+    document.querySelectorAll('.mob-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById('mobbtn-' + panel);
+    if (btn) btn.classList.add('active');
+  };
+})();
+
+// Efface le badge quand l'utilisateur ouvre le panneau notifications
+(function() {
+  const _orig = window.toggleNotifPanel;
+  window.toggleNotifPanel = function() {
+    _orig();
+    fcmClearBadge();
+  };
+})();
+</script>
+
 </body>
 </html>
