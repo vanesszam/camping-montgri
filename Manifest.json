@@ -8,6 +8,8 @@
   "background_color": "#0F172A",
   "theme_color": "#0F172A",
   "orientation": "portrait-primary",
+  "lang": "fr",
+  "categories": ["productivity", "business"],
   "icons": [
     {
       "src": "https://raw.githubusercontent.com/vanesszam/camping-montgri/main/icon-192.png",
@@ -22,6 +24,20 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["productivity", "business"],
-  "lang": "en"
+  "shortcuts": [
+    {
+      "name": "Cleaning",
+      "short_name": "Cleaning",
+      "description": "Voir les tâches de nettoyage",
+      "url": "/camping-montgri/?tab=cleaning",
+      "icons": [{ "src": "https://raw.githubusercontent.com/vanesszam/camping-montgri/main/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Maintenance",
+      "short_name": "Maintenance",
+      "description": "Voir les tâches de maintenance",
+      "url": "/camping-montgri/?tab=maintenance",
+      "icons": [{ "src": "https://raw.githubusercontent.com/vanesszam/camping-montgri/main/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
 }
